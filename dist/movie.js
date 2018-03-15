@@ -1,13 +1,15 @@
-!function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var o;"undefined"!=typeof window?o=window:"undefined"!=typeof global?o=global:"undefined"!=typeof self&&(o=self),o.CodeMirrorMovie=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-"use strict";
+(function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
+'use strict';
 
-var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-var _utils = require("./utils");
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var extend = _utils.extend;
-var makePos = _utils.makePos;
-var getCursor = _utils.getCursor;
+var _utils = require('./utils');
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var actions = {
 	/**
@@ -22,25 +24,25 @@ var actions = {
   * scenario is paused and revert when played again 
   */
 	type: function type(options, editor, next, timer) {
-		options = extend({
-			text: "", // text to type
+		options = (0, _utils.extend)({
+			text: '', // text to type
 			delay: 60, // delay between character typing
 			pos: null // initial position where to start typing
-		}, wrap("text", options));
+		}, wrap('text', options));
 
 		if (!options.text) {
-			throw new Error("No text provided for \"type\" action");
+			throw new Error('No text provided for "type" action');
 		}
 
 		if (options.pos !== null) {
-			editor.setCursor(makePos(options.pos, editor));
+			editor.setCursor((0, _utils.makePos)(options.pos, editor));
 		}
 
-		var chars = options.text.split("");
+		var chars = options.text.split('');
 
 		timer(function perform() {
 			var ch = chars.shift();
-			editor.replaceSelection(ch, "end");
+			editor.replaceSelection(ch, 'end');
 			if (chars.length) {
 				timer(perform, options.delay);
 			} else {
@@ -57,9 +59,9 @@ var actions = {
   * @param timer
   */
 	wait: function wait(options, editor, next, timer) {
-		options = extend({
+		options = (0, _utils.extend)({
 			timeout: 100
-		}, wrap("timeout", options));
+		}, wrap('timeout', options));
 
 		timer(next, parseInt(options.timeout, 10));
 	},
@@ -68,19 +70,19 @@ var actions = {
   * Move caret to a specified position
   */
 	moveTo: function moveTo(options, editor, next, timer) {
-		options = extend({
+		options = (0, _utils.extend)({
 			delay: 80,
 			immediate: false // TODO: remove, use delay: 0 instead
-		}, wrap("pos", options));
+		}, wrap('pos', options));
 
-		if (typeof options.pos === "undefined") {
-			throw new Error("No position specified for \"moveTo\" action");
+		if (typeof options.pos === 'undefined') {
+			throw new Error('No position specified for "moveTo" action');
 		}
 
-		var curPos = getCursor(editor);
+		var curPos = (0, _utils.getCursor)(editor);
 		// reset selection, if exists
 		editor.setSelection(curPos, curPos);
-		var targetPos = makePos(options.pos, editor);
+		var targetPos = (0, _utils.makePos)(options.pos, editor);
 
 		if (options.immediate || !options.delay) {
 			editor.setCursor(targetPos);
@@ -96,7 +98,7 @@ var actions = {
 		var stepChar = deltaChar < 0 ? -1 : 1;
 
 		timer(function perform() {
-			curPos = getCursor(editor);
+			curPos = (0, _utils.getCursor)(editor);
 			if (steps > 0 && !(curPos.line == targetPos.line && curPos.ch == targetPos.ch)) {
 
 				if (curPos.line != targetPos.line) {
@@ -121,15 +123,15 @@ var actions = {
   * Similar to "moveTo" function but with immediate cursor position update
   */
 	jumpTo: function jumpTo(options, editor, next, timer) {
-		options = extend({
+		options = (0, _utils.extend)({
 			afterDelay: 200
-		}, wrap("pos", options));
+		}, wrap('pos', options));
 
-		if (typeof options.pos === "undefined") {
-			throw new Error("No position specified for \"jumpTo\" action");
+		if (typeof options.pos === 'undefined') {
+			throw new Error('No position specified for "jumpTo" action');
 		}
 
-		editor.setCursor(makePos(options.pos, editor));
+		editor.setCursor((0, _utils.makePos)(options.pos, editor));
 		timer(next, options.afterDelay);
 	},
 
@@ -141,14 +143,14 @@ var actions = {
   * @param {Function} timer
   */
 	run: function run(options, editor, next, timer) {
-		options = extend({
+		options = (0, _utils.extend)({
 			beforeDelay: 500,
 			times: 1
-		}, wrap("command", options));
+		}, wrap('command', options));
 
 		var times = options.times;
 		timer(function perform() {
-			if (typeof options.command === "function") {
+			if (typeof options.command === 'function') {
 				options.command(editor, options);
 			} else {
 				editor.execCommand(options.command);
@@ -170,54 +172,35 @@ var actions = {
   * @param {Function} timer
   */
 	select: function select(options, editor, next, timer) {
-		options = extend({
-			from: "caret"
-		}, wrap("to", options));
+		options = (0, _utils.extend)({
+			from: 'caret'
+		}, wrap('to', options));
 
-		var from = makePos(options.from, editor);
-		var to = makePos(options.to, editor);
+		var from = (0, _utils.makePos)(options.from, editor);
+		var to = (0, _utils.makePos)(options.to, editor);
 		editor.setSelection(from, to);
 		next();
 	}
 };
 
 function wrap(key, value) {
-	return typeof value === "object" ? value : _defineProperty({}, key, value);
+	return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : _defineProperty({}, key, value);
 }
 
-module.exports = actions;
+exports.default = actions;
+
 },{"./utils":5}],2:[function(require,module,exports){
 "use strict";
 
-exports.viewportRect = viewportRect;
-
-/**
- * Removes element from parent
- * @param {Element} elem
- * @returns {Element}
- */
-exports.remove = remove;
-
-/**
- * Renders string into DOM element
- * @param {String} str
- * @returns {Element}
- */
-exports.toDOM = toDOM;
-
-/**
- * Sets or retrieves CSS property value
- * @param {Element} elem
- * @param {String} prop
- * @param {String} val
- */
-exports.css = css;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-"use strict";
+exports.viewportRect = viewportRect;
+exports.remove = remove;
+exports.toDOM = toDOM;
+exports.css = css;
 
-var toArray = require("./utils").toArray;
+var _utils = require('./utils');
 
 var w3cCSS = document.defaultView && document.defaultView.getComputedStyle;
 
@@ -237,6 +220,11 @@ function viewportRect() {
 	};
 }
 
+/**
+ * Removes element from parent
+ * @param {Element} elem
+ * @returns {Element}
+ */
 function remove(elem) {
 	ar(elem).forEach(function (el) {
 		return el.parentNode && el.parentNode.removeChild(el);
@@ -244,18 +232,29 @@ function remove(elem) {
 	return elem;
 }
 
+/**
+ * Renders string into DOM element
+ * @param {String} str
+ * @returns {Element}
+ */
 function toDOM(str) {
-	var div = document.createElement("div");
+	var div = document.createElement('div');
 	div.innerHTML = str;
 	return div.firstChild;
 }
 
+/**
+ * Sets or retrieves CSS property value
+ * @param {Element} elem
+ * @param {String} prop
+ * @param {String} val
+ */
 function css(elem, prop, val) {
-	if (typeof prop === "string" && val == null) {
+	if (typeof prop === 'string' && val == null) {
 		return getCSS(elem, prop);
 	}
 
-	if (typeof prop === "string") {
+	if (typeof prop === 'string') {
 		var obj = {};
 		obj[prop] = val;
 		prop = obj;
@@ -266,7 +265,7 @@ function css(elem, prop, val) {
 
 function ar(obj) {
 	if (obj.length === +obj.length) {
-		return toArray(obj);
+		return (0, _utils.toArray)(obj);
 	}
 
 	return Array.isArray(obj) ? obj : [obj];
@@ -297,7 +296,7 @@ function getCSS(elem, name) {
 	}
 
 	if (w3cCSS) {
-		var cs = window.getComputedStyle(elem, "");
+		var cs = window.getComputedStyle(elem, '');
 		return cs.getPropertyValue(name);
 	}
 
@@ -317,9 +316,9 @@ function getCSS(elem, name) {
 
 			// Put in the new values to get a computed value out
 			elem.runtimeStyle.left = elem.currentStyle.left;
-			var suffix = rsuf.test(ret) ? "em" : "";
-			style.left = nameCamel === "fontSize" ? "1em" : ret + suffix || 0;
-			ret = style.pixelLeft + "px";
+			var suffix = rsuf.test(ret) ? 'em' : '';
+			style.left = nameCamel === 'fontSize' ? '1em' : ret + suffix || 0;
+			ret = style.pixelLeft + 'px';
 
 			// Revert the changed values
 			style.left = left;
@@ -340,33 +339,17 @@ function setCSS(elem, params) {
 		return;
 	}
 
-	var numProps = { "line-height": 1, "z-index": 1, opacity: 1 };
+	var numProps = { 'line-height': 1, 'z-index': 1, opacity: 1 };
 	var props = Object.keys(params).map(function (k) {
 		var v = params[k];
-		var name = k.replace(/([A-Z])/g, "-$1").toLowerCase();
-		return name + ":" + (typeof v === "number" && !(name in numProps) ? v + "px" : v);
+		var name = k.replace(/([A-Z])/g, '-$1').toLowerCase();
+		return name + ':' + (typeof v === 'number' && !(name in numProps) ? v + 'px' : v);
 	});
 
-	elem.style.cssText += ";" + props.join(";");
+	elem.style.cssText += ';' + props.join(';');
 }
+
 },{"./utils":5}],3:[function(require,module,exports){
-"use strict";
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-/**
- * High-level function to create movie instance on textarea.
- * @param {Element} target Reference to textarea, either <code>Element</code>
- * or string ID. It can also accept existing CodeMirror object.
- * @param {Object} movieOptions Movie options. See <code>defaultOptions</code>
- * for value reference
- * @param {Object} editorOptions Additional options passed to CodeMirror
- * editor initializer.
- */
-exports["default"] = movie;
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 /**
  * A high-level library interface for creating scenarios over textarea
  * element. The <code>CodeMirror.movie</code> takes reference to textarea
@@ -375,46 +358,54 @@ Object.defineProperty(exports, "__esModule", {
  */
 "use strict";
 
-var _utils = require("./utils");
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.defaultOptions = undefined;
+exports.default = movie;
 
-var parseJSON = _utils.parseJSON;
-var extend = _utils.extend;
-var toArray = _utils.toArray;
+var _utils = require('./utils');
 
-var Scenario = _interopRequire(require("./scenario"));
+var _scenario = require('./scenario');
 
-var outline = _interopRequire(require("./widgets/outline"));
+var _scenario2 = _interopRequireDefault(_scenario);
+
+var _outline = require('./widgets/outline');
+
+var _outline2 = _interopRequireDefault(_outline);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var ios = /AppleWebKit/.test(navigator.userAgent) && /Mobile\/\w+/.test(navigator.userAgent);
 var mac = ios || /Mac/.test(navigator.platform);
 
 var macCharMap = {
-	ctrl: "⌃",
-	control: "⌃",
-	cmd: "⌘",
-	shift: "⇧",
-	alt: "⌥",
-	enter: "⏎",
-	tab: "⇥",
-	left: "←",
-	right: "→",
-	up: "↑",
-	down: "↓"
+	'ctrl': '⌃',
+	'control': '⌃',
+	'cmd': '⌘',
+	'shift': '⇧',
+	'alt': '⌥',
+	'enter': '⏎',
+	'tab': '⇥',
+	'left': '←',
+	'right': '→',
+	'up': '↑',
+	'down': '↓'
 };
 
 var pcCharMap = {
-	cmd: "Ctrl",
-	control: "Ctrl",
-	ctrl: "Ctrl",
-	alt: "Alt",
-	shift: "Shift",
-	left: "←",
-	right: "→",
-	up: "↑",
-	down: "↓"
+	'cmd': 'Ctrl',
+	'control': 'Ctrl',
+	'ctrl': 'Ctrl',
+	'alt': 'Alt',
+	'shift': 'Shift',
+	'left': '←',
+	'right': '→',
+	'up': '↑',
+	'down': '↓'
 };
 
-var defaultOptions = {
+var defaultOptions = exports.defaultOptions = {
 	/**
   * Automatically parse movie definition from textarea content. Setting
   * this property to <code>false</code> assumes that user wants to
@@ -426,7 +417,7 @@ var defaultOptions = {
   * String or regexp used to separate sections of movie definition, e.g.
   * default value, scenario and editor options
   */
-	sectionSeparator: "@@@",
+	sectionSeparator: '@@@',
 
 	/** Regular expression to extract outline from scenario line */
 	outlineSeparator: /\s+:::\s+(.+)$/,
@@ -436,42 +427,51 @@ var defaultOptions = {
 
 	/** Strip parentheses from prettyfied keyboard shortcut definition */
 	stripParentheses: false
-};exports.defaultOptions = defaultOptions;
+};
 
+/**
+ * High-level function to create movie instance on textarea.
+ * @param {Element} target Reference to textarea, either <code>Element</code>
+ * or string ID. It can also accept existing CodeMirror object.
+ * @param {Object} movieOptions Movie options. See <code>defaultOptions</code>
+ * for value reference
+ * @param {Object} editorOptions Additional options passed to CodeMirror
+ * editor initializer.
+ */
 function movie(target) {
-	var movieOptions = arguments[1] === undefined ? {} : arguments[1];
-	var editorOptions = arguments[2] === undefined ? {} : arguments[2];
+	var movieOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+	var editorOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
 	setupCodeMirror();
 
-	if (typeof target === "string") {
+	if (typeof target === 'string') {
 		target = document.getElementById(target);
 	}
 
-	var targetIsTextarea = target.nodeName.toLowerCase() === "textarea";
+	var targetIsTextarea = target.nodeName.toLowerCase() === 'textarea';
 
-	movieOptions = extend({}, defaultOptions, movieOptions);
-	editorOptions = extend({
-		theme: "espresso",
-		mode: "text/html",
+	movieOptions = (0, _utils.extend)({}, defaultOptions, movieOptions);
+	editorOptions = (0, _utils.extend)({
+		theme: 'espresso',
+		mode: 'text/html',
 		indentWithTabs: true,
 		tabSize: 4,
 		lineNumbers: true,
 		preventCursorMovement: true
 	}, editorOptions);
 
-	var initialValue = editorOptions.value || (targetIsTextarea ? target.value : target.getValue()) || "";
+	var initialValue = editorOptions.value || (targetIsTextarea ? target.value : target.getValue()) || '';
 
 	if (targetIsTextarea && movieOptions.parse) {
-		extend(movieOptions, parseMovieDefinition(initialValue, movieOptions));
+		(0, _utils.extend)(movieOptions, parseMovieDefinition(initialValue, movieOptions));
 		initialValue = movieOptions.value;
 		if (movieOptions.editorOptions) {
-			extend(editorOptions, movieOptions.editorOptions);
+			(0, _utils.extend)(editorOptions, movieOptions.editorOptions);
 		}
 
 		// read CM options from given textarea
 		var cmAttr = /^data\-cm\-(.+)$/i;
-		toArray(target.attributes).forEach(function (attr) {
+		(0, _utils.toArray)(target.attributes).forEach(function (attr) {
 			var m = attr.name.match(cmAttr);
 			if (m) {
 				editorOptions[m[1]] = attr.value;
@@ -480,13 +480,13 @@ function movie(target) {
 	}
 
 	// normalize line endings
-	initialValue = initialValue.replace(/\r?\n/g, "\n");
+	initialValue = initialValue.replace(/\r?\n/g, '\n');
 
 	// locate initial caret position from | symbol
-	var initialPos = initialValue.indexOf("|");
+	var initialPos = initialValue.indexOf('|');
 
 	if (targetIsTextarea) {
-		target.value = editorOptions.value = initialValue = initialValue.replace(/\|/g, "");
+		target.value = editorOptions.value = initialValue = initialValue.replace(/\|/g, '');
 	}
 
 	// create editor instance if needed
@@ -506,18 +506,18 @@ function movie(target) {
 
 	// adjust height, if required
 	if (editorOptions.height) {
-		wrapper.style.height = editorOptions.height + "px";
+		wrapper.style.height = editorOptions.height + 'px';
 	}
 
-	wrapper.className += " CodeMirror-movie" + (movieOptions.outline ? " CodeMirror-movie_with-outline" : "");
+	wrapper.className += ' CodeMirror-movie' + (movieOptions.outline ? ' CodeMirror-movie_with-outline' : '');
 
-	var sc = new Scenario(movieOptions.scenario, editor);
+	var sc = new _scenario2.default(movieOptions.scenario, editor);
 	if (movieOptions.outline) {
-		wrapper.className += " CodeMirror-movie_with-outline";
-		wrapper.appendChild(outline(movieOptions.outline, sc));
+		wrapper.className += ' CodeMirror-movie_with-outline';
+		wrapper.appendChild((0, _outline2.default)(movieOptions.outline, sc));
 	}
 	return sc;
-}
+};
 
 /**
  * Prettyfies key bindings references in given string: formats it according
@@ -537,9 +537,9 @@ function prettifyKeyBindings(str, options) {
 				return map[key.toLowerCase()] || key.toUpperCase();
 			});
 
-			m = parts.join(mac ? "" : "+");
+			m = parts.join(mac ? '' : '+');
 			if (!options.stripParentheses) {
-				m = "(" + m + ")";
+				m = '(' + m + ')';
 			}
 		}
 
@@ -548,19 +548,19 @@ function prettifyKeyBindings(str, options) {
 }
 
 function readLines(text) {
-	// IE fails to split string by regexp,
+	// IE fails to split string by regexp, 
 	// need to normalize newlines first
-	var nl = "\n";
-	var lines = (text || "").replace(/\r\n/g, nl).replace(/\n\r/g, nl).replace(/\r/g, nl).split(nl);
+	var nl = '\n';
+	var lines = (text || '').replace(/\r\n/g, nl).replace(/\n\r/g, nl).replace(/\r/g, nl).split(nl);
 
 	return lines.filter(Boolean);
 }
 
 function unescape(text) {
 	var replacements = {
-		"&lt;": "<",
-		"&gt;": ">",
-		"&amp;": "&"
+		'&lt;': '<',
+		'&gt;': '>',
+		'&amp;': '&'
 	};
 
 	return text.replace(/&(lt|gt|amp);/g, function (str, p1) {
@@ -574,9 +574,9 @@ function unescape(text) {
  * @param {Object} options
  */
 function parseMovieDefinition(text) {
-	var options = arguments[1] === undefined ? {} : arguments[1];
+	var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-	options = extend({}, defaultOptions, options || {});
+	options = (0, _utils.extend)({}, defaultOptions, options || {});
 	var parts = text.split(options.sectionSeparator);
 
 	// parse scenario
@@ -585,8 +585,8 @@ function parseMovieDefinition(text) {
 	var outline = {};
 	var editorOptions = {};
 
-	var skipComment = function (line) {
-		return line.charAt(0) !== "#";
+	var skipComment = function skipComment(line) {
+		return line.charAt(0) !== '#';
 	};
 
 	// read movie definition
@@ -596,7 +596,7 @@ function parseMovieDefinition(text) {
 			if (options.prettifyKeys) {
 				outline[scenario.length] = prettifyKeyBindings(title.trim());
 			}
-			return "";
+			return '';
 		});
 
 		var sd = line.match(reDef);
@@ -604,13 +604,13 @@ function parseMovieDefinition(text) {
 			return scenario.push(line.trim());
 		}
 
-		if (sd[2].charAt(0) === "{") {
+		if (sd[2].charAt(0) === '{') {
 			var obj = {};
-			obj[sd[1]] = parseJSON(unescape(sd[2]));
+			obj[sd[1]] = (0, _utils.parseJSON)(unescape(sd[2]));
 			return scenario.push(obj);
 		}
 
-		scenario.push(sd[1] + ":" + unescape(sd[2]));
+		scenario.push(sd[1] + ':' + unescape(sd[2]));
 	});
 
 	// read editor options
@@ -632,66 +632,68 @@ function parseMovieDefinition(text) {
 }
 
 function setupCodeMirror() {
-	if (typeof CodeMirror === "undefined" || "preventCursorMovement" in CodeMirror.defaults) {
+	if (typeof CodeMirror === 'undefined' || 'preventCursorMovement' in CodeMirror.defaults) {
 		return;
 	}
 
-	CodeMirror.defineOption("preventCursorMovement", false, function (cm) {
-		var handler = function (cm, event) {
-			return cm.getOption("readOnly") && event.preventDefault();
+	CodeMirror.defineOption('preventCursorMovement', false, function (cm) {
+		var handler = function handler(cm, event) {
+			return cm.getOption('readOnly') && event.preventDefault();
 		};
-		cm.on("keydown", handler);
-		cm.on("mousedown", handler);
+		cm.on('keydown', handler);
+		cm.on('mousedown', handler);
 	});
 }
 
-if (typeof CodeMirror !== "undefined") {
+if (typeof CodeMirror !== 'undefined') {
 	CodeMirror.movie = movie;
 }
+
 },{"./scenario":4,"./utils":5,"./widgets/outline":7}],4:[function(require,module,exports){
 "use strict";
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-"use strict";
+exports.defaultOptions = undefined;
 
-var commonActions = _interopRequire(require("./actions"));
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var prompt = require("./widgets/prompt").actions;
+var _actions = require('./actions');
 
-var tooltip = require("./widgets/tooltip").actions;
+var _actions2 = _interopRequireDefault(_actions);
 
-var extend = require("./utils").extend;
+var _prompt = require('./widgets/prompt');
 
-var actionsDefinition = extend({}, commonActions, prompt, tooltip);
+var _tooltip = require('./widgets/tooltip');
 
-var STATE_IDLE = "idle";
-var STATE_PLAY = "play";
-var STATE_PAUSE = "pause";
+var _utils = require('./utils');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var actionsDefinition = (0, _utils.extend)({}, _actions2.default, _prompt.actions, _tooltip.actions);
+
+var STATE_IDLE = 'idle';
+var STATE_PLAY = 'play';
+var STATE_PAUSE = 'pause';
 
 // Regular expression used to split event strings
 var eventSplitter = /\s+/;
 
-var defaultOptions = {
+var defaultOptions = exports.defaultOptions = {
 	beforeDelay: 1000,
 	afterDelay: 1000
 };
 
-exports.defaultOptions = defaultOptions;
 /**
  * @param {Object} actions Actions scenario
  * @param {Object} data Initial content (<code>String</code>) or editor
  * instance (<code>CodeMirror</code>)
  */
 
-var Scenario = (function () {
+var Scenario = function () {
 	function Scenario(actions, data) {
 		_classCallCheck(this, Scenario);
 
@@ -701,7 +703,7 @@ var Scenario = (function () {
 		this._state = STATE_IDLE;
 		this._timerQueue = [];
 
-		if (data && "getValue" in data) {
+		if (data && 'getValue' in data) {
 			this._editor = data;
 		}
 
@@ -714,298 +716,279 @@ var Scenario = (function () {
 		}
 	}
 
-	_createClass(Scenario, {
-		_setup: {
-			value: function _setup(editor) {
-				if (!editor && this._editor) {
-					editor = this._editor;
-				}
-
-				editor.execCommand("revert");
-				return editor;
+	_createClass(Scenario, [{
+		key: '_setup',
+		value: function _setup(editor) {
+			if (!editor && this._editor) {
+				editor = this._editor;
 			}
-		},
-		play: {
 
-			/**
-    * Play current scenario
-    * @param {CodeMirror} editor Editor instance where on which scenario 
-    * should be played
-    * @memberOf Scenario
-    */
+			editor.execCommand('revert');
+			return editor;
+		}
 
-			value: function play(editor) {
-				if (this._state === STATE_PLAY) {
-					// already playing
-					return;
-				}
+		/**
+   * Play current scenario
+   * @param {CodeMirror} editor Editor instance where on which scenario 
+   * should be played
+   * @memberOf Scenario
+   */
 
-				if (this._state === STATE_PAUSE) {
-					// revert from paused state
-					editor = editor || this._editor;
-					editor.focus();
-					var timerObj = null;
-					while (timerObj = this._timerQueue.shift()) {
-						requestTimer(timerObj.fn, timerObj.delay);
-					}
+	}, {
+		key: 'play',
+		value: function play(editor) {
+			if (this._state === STATE_PLAY) {
+				// already playing
+				return;
+			}
 
-					this._state = STATE_PLAY;
-					this.trigger("resume");
-					return;
-				}
-
-				this._editor = editor = this._setup(editor);
+			if (this._state === STATE_PAUSE) {
+				// revert from paused state
+				editor = editor || this._editor;
 				editor.focus();
-
-				var timer = this.requestTimer.bind(this);
-				var that = this;
-				this._actionIx = 0;
-				var next = (function (_next) {
-					var _nextWrapper = function next() {
-						return _next.apply(this, arguments);
-					};
-
-					_nextWrapper.toString = function () {
-						return _next.toString();
-					};
-
-					return _nextWrapper;
-				})(function () {
-					if (that._actionIx >= that._actions.length) {
-						return timer(function () {
-							that.stop();
-						}, defaultOptions.afterDelay);
-					}
-
-					that.trigger("action", that._actionIx);
-					var action = parseActionCall(that._actions[that._actionIx++]);
-
-					if (action.name in actionsDefinition) {
-						actionsDefinition[action.name].call(that, action.options, editor, next, timer);
-					} else {
-						throw new Error("No such action: " + action.name);
-					}
-				});
+				var timerObj = null;
+				while (timerObj = this._timerQueue.shift()) {
+					_requestTimer(timerObj.fn, timerObj.delay);
+				}
 
 				this._state = STATE_PLAY;
-				this._editor.setOption("readOnly", true);
-				this.trigger("play");
-				timer(next, defaultOptions.beforeDelay);
+				this.trigger('resume');
+				return;
 			}
-		},
-		pause: {
 
-			/**
-    * Pause current scenario playback. It can be restored with 
-    * <code>play()</code> method call 
-    */
+			this._editor = editor = this._setup(editor);
+			editor.focus();
 
-			value: function pause() {
-				this._state = STATE_PAUSE;
-				this.trigger("pause");
-			}
-		},
-		stop: {
-
-			/**
-    * Stops playback of current scenario
-    */
-
-			value: function stop() {
-				if (this._state !== STATE_IDLE) {
-					this._state = STATE_IDLE;
-					this._timerQueue.length = 0;
-					this._editor.setOption("readOnly", false);
-					this.trigger("stop");
+			var timer = this.requestTimer.bind(this);
+			var that = this;
+			this._actionIx = 0;
+			var next = function next() {
+				if (that._actionIx >= that._actions.length) {
+					return timer(function () {
+						that.stop();
+					}, defaultOptions.afterDelay);
 				}
-			}
-		},
-		state: {
 
-			/**
-    * Returns current playback state
-    * @return {String}
-    */
+				that.trigger('action', that._actionIx);
+				var action = parseActionCall(that._actions[that._actionIx++]);
 
-			get: function () {
-				return this._state;
-			}
-		},
-		toggle: {
-
-			/**
-    * Toggle playback of movie scenario
-    */
-
-			value: function toggle() {
-				if (this._state === STATE_PLAY) {
-					this.pause();
+				if (action.name in actionsDefinition) {
+					actionsDefinition[action.name].call(that, action.options, editor, next, timer);
 				} else {
-					this.play();
+					throw new Error('No such action: ' + action.name);
 				}
-			}
-		},
-		requestTimer: {
-			value: (function (_requestTimer) {
-				var _requestTimerWrapper = function requestTimer(_x, _x2) {
-					return _requestTimer.apply(this, arguments);
-				};
+			};
 
-				_requestTimerWrapper.toString = function () {
-					return _requestTimer.toString();
-				};
+			this._state = STATE_PLAY;
+			this._editor.setOption('readOnly', true);
+			this.trigger('play');
+			timer(next, defaultOptions.beforeDelay);
+		}
 
-				return _requestTimerWrapper;
-			})(function (fn, delay) {
-				if (this._state !== STATE_PLAY) {
-					// save function call into a queue till next 'play()' call
-					this._timerQueue.push({
-						fn: fn,
-						delay: delay
-					});
-				} else {
-					return requestTimer(fn, delay);
-				}
-			})
-		},
-		on: {
+		/**
+   * Pause current scenario playback. It can be restored with 
+   * <code>play()</code> method call 
+   */
 
-			// borrowed from Backbone
-			/**
-    * Bind one or more space separated events, `events`, to a `callback`
-    * function. Passing `"all"` will bind the callback to all events fired.
-    * @param {String} events
-    * @param {Function} callback
-    * @param {Object} context
-    * @memberOf eventDispatcher
-    */
+	}, {
+		key: 'pause',
+		value: function pause() {
+			this._state = STATE_PAUSE;
+			this.trigger('pause');
+		}
 
-			value: function on(events, callback, context) {
-				var calls, event, node, tail, list;
-				if (!callback) {
-					return this;
-				}
+		/**
+   * Stops playback of current scenario
+   */
 
-				events = events.split(eventSplitter);
-				calls = this._callbacks || (this._callbacks = {});
-
-				// Create an immutable callback list, allowing traversal during
-				// modification.  The tail is an empty object that will always be used
-				// as the next node.
-				while (event = events.shift()) {
-					list = calls[event];
-					node = list ? list.tail : {};
-					node.next = tail = {};
-					node.context = context;
-					node.callback = callback;
-					calls[event] = {
-						tail: tail,
-						next: list ? list.next : node
-					};
-				}
-
-				return this;
-			}
-		},
-		off: {
-
-			/**
-    * Remove one or many callbacks. If `context` is null, removes all
-    * callbacks with that function. If `callback` is null, removes all
-    * callbacks for the event. If `events` is null, removes all bound
-    * callbacks for all events.
-    * @param {String} events
-    * @param {Function} callback
-    * @param {Object} context
-    */
-
-			value: function off(events, callback, context) {
-				var event, calls, node, tail, cb, ctx;
-
-				// No events, or removing *all* events.
-				if (!(calls = this._callbacks)) {
-					return;
-				}
-
-				if (!(events || callback || context)) {
-					delete this._callbacks;
-					return this;
-				}
-
-				// Loop through the listed events and contexts, splicing them out of the
-				// linked list of callbacks if appropriate.
-				events = events ? events.split(eventSplitter) : Object.keys(calls);
-				while (event = events.shift()) {
-					node = calls[event];
-					delete calls[event];
-					if (!node || !(callback || context)) {
-						continue;
-					}
-
-					// Create a new list, omitting the indicated callbacks.
-					tail = node.tail;
-					while ((node = node.next) !== tail) {
-						cb = node.callback;
-						ctx = node.context;
-						if (callback && cb !== callback || context && ctx !== context) {
-							this.on(event, cb, ctx);
-						}
-					}
-				}
-
-				return this;
-			}
-		},
-		trigger: {
-
-			/**
-    * Trigger one or many events, firing all bound callbacks. Callbacks are
-    * passed the same arguments as `trigger` is, apart from the event name
-    * (unless you're listening on `"all"`, which will cause your callback
-    * to receive the true name of the event as the first argument).
-    * @param {String} events
-    */
-
-			value: function trigger(events) {
-				for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					rest[_key - 1] = arguments[_key];
-				}
-
-				var event, node, calls, tail, args, all;
-				if (!(calls = this._callbacks)) {
-					return this;
-				}
-
-				all = calls.all;
-				events = events.split(eventSplitter);
-
-				// For each event, walk through the linked list of callbacks twice,
-				// first to trigger the event, then to trigger any `"all"` callbacks.
-				while (event = events.shift()) {
-					if (node = calls[event]) {
-						tail = node.tail;
-						while ((node = node.next) !== tail) {
-							node.callback.apply(node.context || this, rest);
-						}
-					}
-					if (node = all) {
-						tail = node.tail;
-						args = [event].concat(rest);
-						while ((node = node.next) !== tail) {
-							node.callback.apply(node.context || this, args);
-						}
-					}
-				}
-
-				return this;
+	}, {
+		key: 'stop',
+		value: function stop() {
+			if (this._state !== STATE_IDLE) {
+				this._state = STATE_IDLE;
+				this._timerQueue.length = 0;
+				this._editor.setOption('readOnly', false);
+				this.trigger('stop');
 			}
 		}
-	});
+
+		/**
+   * Returns current playback state
+   * @return {String}
+   */
+
+	}, {
+		key: 'toggle',
+
+
+		/**
+   * Toggle playback of movie scenario
+   */
+		value: function toggle() {
+			if (this._state === STATE_PLAY) {
+				this.pause();
+			} else {
+				this.play();
+			}
+		}
+	}, {
+		key: 'requestTimer',
+		value: function requestTimer(fn, delay) {
+			if (this._state !== STATE_PLAY) {
+				// save function call into a queue till next 'play()' call
+				this._timerQueue.push({
+					fn: fn,
+					delay: delay
+				});
+			} else {
+				return _requestTimer(fn, delay);
+			}
+		}
+
+		// borrowed from Backbone
+		/**
+   * Bind one or more space separated events, `events`, to a `callback`
+   * function. Passing `"all"` will bind the callback to all events fired.
+   * @param {String} events
+   * @param {Function} callback
+   * @param {Object} context
+   * @memberOf eventDispatcher
+   */
+
+	}, {
+		key: 'on',
+		value: function on(events, callback, context) {
+			var calls, event, node, tail, list;
+			if (!callback) {
+				return this;
+			}
+
+			events = events.split(eventSplitter);
+			calls = this._callbacks || (this._callbacks = {});
+
+			// Create an immutable callback list, allowing traversal during
+			// modification.  The tail is an empty object that will always be used
+			// as the next node.
+			while (event = events.shift()) {
+				list = calls[event];
+				node = list ? list.tail : {};
+				node.next = tail = {};
+				node.context = context;
+				node.callback = callback;
+				calls[event] = {
+					tail: tail,
+					next: list ? list.next : node
+				};
+			}
+
+			return this;
+		}
+
+		/**
+   * Remove one or many callbacks. If `context` is null, removes all
+   * callbacks with that function. If `callback` is null, removes all
+   * callbacks for the event. If `events` is null, removes all bound
+   * callbacks for all events.
+   * @param {String} events
+   * @param {Function} callback
+   * @param {Object} context
+   */
+
+	}, {
+		key: 'off',
+		value: function off(events, callback, context) {
+			var event, calls, node, tail, cb, ctx;
+
+			// No events, or removing *all* events.
+			if (!(calls = this._callbacks)) {
+				return;
+			}
+
+			if (!(events || callback || context)) {
+				delete this._callbacks;
+				return this;
+			}
+
+			// Loop through the listed events and contexts, splicing them out of the
+			// linked list of callbacks if appropriate.
+			events = events ? events.split(eventSplitter) : Object.keys(calls);
+			while (event = events.shift()) {
+				node = calls[event];
+				delete calls[event];
+				if (!node || !(callback || context)) {
+					continue;
+				}
+
+				// Create a new list, omitting the indicated callbacks.
+				tail = node.tail;
+				while ((node = node.next) !== tail) {
+					cb = node.callback;
+					ctx = node.context;
+					if (callback && cb !== callback || context && ctx !== context) {
+						this.on(event, cb, ctx);
+					}
+				}
+			}
+
+			return this;
+		}
+
+		/**
+   * Trigger one or many events, firing all bound callbacks. Callbacks are
+   * passed the same arguments as `trigger` is, apart from the event name
+   * (unless you're listening on `"all"`, which will cause your callback
+   * to receive the true name of the event as the first argument).
+   * @param {String} events
+   */
+
+	}, {
+		key: 'trigger',
+		value: function trigger(events) {
+			var event, node, calls, tail, args, all;
+			if (!(calls = this._callbacks)) {
+				return this;
+			}
+
+			all = calls.all;
+			events = events.split(eventSplitter);
+
+			// For each event, walk through the linked list of callbacks twice,
+			// first to trigger the event, then to trigger any `"all"` callbacks.
+
+			for (var _len = arguments.length, rest = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+				rest[_key - 1] = arguments[_key];
+			}
+
+			while (event = events.shift()) {
+				if (node = calls[event]) {
+					tail = node.tail;
+					while ((node = node.next) !== tail) {
+						node.callback.apply(node.context || this, rest);
+					}
+				}
+				if (node = all) {
+					tail = node.tail;
+					args = [event].concat(rest);
+					while ((node = node.next) !== tail) {
+						node.callback.apply(node.context || this, args);
+					}
+				}
+			}
+
+			return this;
+		}
+	}, {
+		key: 'state',
+		get: function get() {
+			return this._state;
+		}
+	}]);
 
 	return Scenario;
-})();
+}();
 
-exports["default"] = Scenario;
+exports.default = Scenario;
+;
 
 /**
  * Parses action call from string
@@ -1013,11 +996,11 @@ exports["default"] = Scenario;
  * @returns {Object}
  */
 function parseActionCall(data) {
-	if (typeof data === "string") {
-		var parts = data.split(":");
+	if (typeof data === 'string') {
+		var parts = data.split(':');
 		return {
 			name: parts.shift(),
-			options: parts.join(":")
+			options: parts.join(':')
 		};
 	} else {
 		var name = Object.keys(data)[0];
@@ -1028,63 +1011,46 @@ function parseActionCall(data) {
 	}
 }
 
-function requestTimer(fn, delay) {
+function _requestTimer(fn, delay) {
 	if (!delay) {
 		fn();
 	} else {
 		return setTimeout(fn, delay);
 	}
 }
+
 },{"./actions":1,"./utils":5,"./widgets/prompt":8,"./widgets/tooltip":9}],5:[function(require,module,exports){
-"use strict";
+'use strict';
 
-exports.extend = extend;
-exports.toArray = toArray;
-
-/**
- * Returns prefixed (if required) CSS property name
- * @param  {String} prop
- * @return {String}
- */
-exports.prefixed = prefixed;
-exports.posObj = posObj;
-exports.getCursor = getCursor;
-
-/**
- * Helper function that produces <code>{line, ch}</code> object from
- * passed argument
- * @param {Object} pos
- * @param {CodeMirror} editor
- * @returns {Object}
- */
-exports.makePos = makePos;
-exports.template = template;
-exports.find = find;
-
-/**
- * Relaxed JSON parser.
- * @param {String} text
- * @returns {Object} 
- */
-exports.parseJSON = parseJSON;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.extend = extend;
+exports.toArray = toArray;
+exports.prefixed = prefixed;
+exports.posObj = posObj;
+exports.getCursor = getCursor;
+exports.makePos = makePos;
+exports.template = template;
+exports.find = find;
+exports.parseJSON = parseJSON;
 var propCache = {};
 
-// detect CSS 3D Transforms for smoother animations
-var has3d = (function () {
-	var el = document.createElement("div");
-	var cssTransform = prefixed("transform");
+// detect CSS 3D Transforms for smoother animations 
+var has3d = exports.has3d = function () {
+	var el = document.createElement('div');
+	var cssTransform = prefixed('transform');
 	if (cssTransform) {
-		el.style[cssTransform] = "translateZ(0)";
-		return /translatez/i.test(el.style[cssTransform]);
+		el.style[cssTransform] = 'translateZ(0)';
+		return (/translatez/i.test(el.style[cssTransform])
+		);
 	}
 
 	return false;
-})();
-
-exports.has3d = has3d;
+}();
 
 function extend(obj) {
 	for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -1092,7 +1058,7 @@ function extend(obj) {
 	}
 
 	args.forEach(function (a) {
-		if (typeof a === "object") {
+		if ((typeof a === 'undefined' ? 'undefined' : _typeof(a)) === 'object') {
 			Object.keys(a).forEach(function (key) {
 				return obj[key] = a[key];
 			});
@@ -1102,20 +1068,25 @@ function extend(obj) {
 }
 
 function toArray(obj) {
-	var ix = arguments[1] === undefined ? 0 : arguments[1];
+	var ix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
 	return Array.prototype.slice.call(obj, ix);
 }
 
+/**
+ * Returns prefixed (if required) CSS property name
+ * @param  {String} prop
+ * @return {String}
+ */
 function prefixed(prop) {
 	if (prop in propCache) {
 		return propCache[prop];
 	}
 
-	var el = document.createElement("div");
+	var el = document.createElement('div');
 	var style = el.style;
 
-	var prefixes = ["o", "ms", "moz", "webkit"];
+	var prefixes = ['o', 'ms', 'moz', 'webkit'];
 	var props = [prop];
 	var capitalize = function capitalize(str) {
 		return str.charAt(0).toUpperCase() + str.substr(1);
@@ -1147,19 +1118,26 @@ function posObj(obj) {
 }
 
 function getCursor(editor) {
-	var start = arguments[1] === undefined ? "from" : arguments[1];
+	var start = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'from';
 
 	return posObj(editor.getCursor(start));
 }
 
+/**
+ * Helper function that produces <code>{line, ch}</code> object from
+ * passed argument
+ * @param {Object} pos
+ * @param {CodeMirror} editor
+ * @returns {Object}
+ */
 function makePos(pos, editor) {
-	if (pos === "caret") {
+	if (pos === 'caret') {
 		return getCursor(editor);
 	}
 
-	if (typeof pos === "string") {
-		if (~pos.indexOf(":")) {
-			var parts = pos.split(":");
+	if (typeof pos === 'string') {
+		if (~pos.indexOf(':')) {
+			var parts = pos.split(':');
 			return {
 				line: +parts[0],
 				ch: +parts[1]
@@ -1169,7 +1147,7 @@ function makePos(pos, editor) {
 		pos = +pos;
 	}
 
-	if (typeof pos === "number") {
+	if (typeof pos === 'number') {
 		return posObj(editor.posFromIndex(pos));
 	}
 
@@ -1177,7 +1155,7 @@ function makePos(pos, editor) {
 }
 
 function template(tmpl, data) {
-	var fn = function (data) {
+	var fn = function fn(data) {
 		return tmpl.replace(/<%([-=])?\s*([\w\-]+)\s*%>/g, function (str, op, key) {
 			return data[key.trim()];
 		});
@@ -1195,40 +1173,35 @@ function find(arr, iter) {
 	return found;
 }
 
+/**
+ * Relaxed JSON parser.
+ * @param {String} text
+ * @returns {Object} 
+ */
 function parseJSON(text) {
 	try {
-		return new Function("return " + text)();
+		return new Function('return ' + text)();
 	} catch (e) {
 		return {};
 	}
 }
+
 },{}],6:[function(require,module,exports){
-"use strict";
+'use strict';
 
-var _createClass = (function () { function defineProperties(target, props) { for (var key in props) { var prop = props[key]; prop.configurable = true; if (prop.value) prop.writable = true; } Object.defineProperties(target, props); } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
-
-exports["default"] = tween;
-
-/**
- * Get or set default value
- * @param  {String} name
- * @param  {Object} value
- * @return {Object}
- */
-exports.defaults = defaults;
-
-/**
- * Returns all active animation objects.
- * For debugging mostly
- * @return {Array}
- */
-exports._all = _all;
-exports.stop = stop;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+exports.default = tween;
+exports.defaults = defaults;
+exports._all = _all;
+exports.stop = stop;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 var global = window;
 var time = Date.now ? function () {
 	return Date.now();
@@ -1236,7 +1209,7 @@ var time = Date.now ? function () {
 	return +new Date();
 };
 
-var indexOf = "indexOf" in Array.prototype ? function (array, value) {
+var indexOf = 'indexOf' in Array.prototype ? function (array, value) {
 	return array.indexOf(value);
 } : function (array, value) {
 	for (var i = 0, il = array.length; i < il; i++) {
@@ -1269,10 +1242,10 @@ function extend(obj) {
  */
 (function () {
 	var lastTime = 0;
-	var vendors = ["ms", "moz", "webkit", "o"];
+	var vendors = ['ms', 'moz', 'webkit', 'o'];
 	for (var x = 0; x < vendors.length && !global.requestAnimationFrame; ++x) {
-		global.requestAnimationFrame = global[vendors[x] + "RequestAnimationFrame"];
-		global.cancelAnimationFrame = global[vendors[x] + "CancelAnimationFrame"] || global[vendors[x] + "CancelRequestAnimationFrame"];
+		global.requestAnimationFrame = global[vendors[x] + 'RequestAnimationFrame'];
+		global.cancelAnimationFrame = global[vendors[x] + 'CancelAnimationFrame'] || global[vendors[x] + 'CancelRequestAnimationFrame'];
 	}
 
 	if (!global.requestAnimationFrame) global.requestAnimationFrame = function (callback, element) {
@@ -1297,7 +1270,7 @@ var idCounter = 0;
 var defaults = {
 	duration: 500, // ms
 	delay: 0,
-	easing: "linear",
+	easing: 'linear',
 	start: dummyFn,
 	step: dummyFn,
 	complete: dummyFn,
@@ -1305,7 +1278,7 @@ var defaults = {
 	reverse: false
 };
 
-var easings = {
+var easings = exports.easings = {
 	linear: function linear(t, b, c, d) {
 		return c * t / d + b;
 	},
@@ -1316,9 +1289,8 @@ var easings = {
 		return -c * (t /= d) * (t - 2) + b;
 	},
 	inOutQuad: function inOutQuad(t, b, c, d) {
-		if ((t /= d / 2) < 1) {
-			return c / 2 * t * t + b;
-		}return -c / 2 * (--t * (t - 2) - 1) + b;
+		if ((t /= d / 2) < 1) return c / 2 * t * t + b;
+		return -c / 2 * (--t * (t - 2) - 1) + b;
 	},
 	inCubic: function inCubic(t, b, c, d) {
 		return c * (t /= d) * t * t + b;
@@ -1327,9 +1299,8 @@ var easings = {
 		return c * ((t = t / d - 1) * t * t + 1) + b;
 	},
 	inOutCubic: function inOutCubic(t, b, c, d) {
-		if ((t /= d / 2) < 1) {
-			return c / 2 * t * t * t + b;
-		}return c / 2 * ((t -= 2) * t * t + 2) + b;
+		if ((t /= d / 2) < 1) return c / 2 * t * t * t + b;
+		return c / 2 * ((t -= 2) * t * t + 2) + b;
 	},
 	inExpo: function inExpo(t, b, c, d) {
 		return t == 0 ? b : c * Math.pow(2, 10 * (t / d - 1)) + b - c * 0.001;
@@ -1338,21 +1309,14 @@ var easings = {
 		return t == d ? b + c : c * 1.001 * (-Math.pow(2, -10 * t / d) + 1) + b;
 	},
 	inOutExpo: function inOutExpo(t, b, c, d) {
-		if (t == 0) {
-			return b;
-		}if (t == d) {
-			return b + c;
-		}if ((t /= d / 2) < 1) {
-			return c / 2 * Math.pow(2, 10 * (t - 1)) + b - c * 0.0005;
-		}return c / 2 * 1.0005 * (-Math.pow(2, -10 * --t) + 2) + b;
+		if (t == 0) return b;
+		if (t == d) return b + c;
+		if ((t /= d / 2) < 1) return c / 2 * Math.pow(2, 10 * (t - 1)) + b - c * 0.0005;
+		return c / 2 * 1.0005 * (-Math.pow(2, -10 * --t) + 2) + b;
 	},
 	inElastic: function inElastic(t, b, c, d, a, p) {
 		var s;
-		if (t == 0) {
-			return b;
-		}if ((t /= d) == 1) {
-			return b + c;
-		}if (!p) p = d * 0.3;
+		if (t == 0) return b;if ((t /= d) == 1) return b + c;if (!p) p = d * .3;
 		if (!a || a < Math.abs(c)) {
 			a = c;s = p / 4;
 		} else s = p / (2 * Math.PI) * Math.asin(c / a);
@@ -1360,11 +1324,7 @@ var easings = {
 	},
 	outElastic: function outElastic(t, b, c, d, a, p) {
 		var s;
-		if (t == 0) {
-			return b;
-		}if ((t /= d) == 1) {
-			return b + c;
-		}if (!p) p = d * 0.3;
+		if (t == 0) return b;if ((t /= d) == 1) return b + c;if (!p) p = d * .3;
 		if (!a || a < Math.abs(c)) {
 			a = c;s = p / 4;
 		} else s = p / (2 * Math.PI) * Math.asin(c / a);
@@ -1372,17 +1332,14 @@ var easings = {
 	},
 	inOutElastic: function inOutElastic(t, b, c, d, a, p) {
 		var s;
-		if (t == 0) {
-			return b;
-		}if ((t /= d / 2) == 2) {
-			return b + c;
-		}if (!p) p = d * (0.3 * 1.5);
+		if (t == 0) return b;
+		if ((t /= d / 2) == 2) return b + c;
+		if (!p) p = d * (.3 * 1.5);
 		if (!a || a < Math.abs(c)) {
 			a = c;s = p / 4;
 		} else s = p / (2 * Math.PI) * Math.asin(c / a);
-		if (t < 1) {
-			return -0.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
-		}return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * 0.5 + c + b;
+		if (t < 1) return -.5 * (a * Math.pow(2, 10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p)) + b;
+		return a * Math.pow(2, -10 * (t -= 1)) * Math.sin((t * d - s) * (2 * Math.PI) / p) * .5 + c + b;
 	},
 	inBack: function inBack(t, b, c, d, s) {
 		if (s == undefined) s = 1.70158;
@@ -1394,9 +1351,8 @@ var easings = {
 	},
 	inOutBack: function inOutBack(t, b, c, d, s) {
 		if (s == undefined) s = 1.70158;
-		if ((t /= d / 2) < 1) {
-			return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
-		}return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
+		if ((t /= d / 2) < 1) return c / 2 * (t * t * (((s *= 1.525) + 1) * t - s)) + b;
+		return c / 2 * ((t -= 2) * t * (((s *= 1.525) + 1) * t + s) + 2) + b;
 	},
 	inBounce: function inBounce(t, b, c, d) {
 		return c - this.outBounce(t, d - t, 0, c, d) + b;
@@ -1405,17 +1361,16 @@ var easings = {
 		if ((t /= d) < 1 / 2.75) {
 			return c * (7.5625 * t * t) + b;
 		} else if (t < 2 / 2.75) {
-			return c * (7.5625 * (t -= 1.5 / 2.75) * t + 0.75) + b;
+			return c * (7.5625 * (t -= 1.5 / 2.75) * t + .75) + b;
 		} else if (t < 2.5 / 2.75) {
-			return c * (7.5625 * (t -= 2.25 / 2.75) * t + 0.9375) + b;
+			return c * (7.5625 * (t -= 2.25 / 2.75) * t + .9375) + b;
 		} else {
-			return c * (7.5625 * (t -= 2.625 / 2.75) * t + 0.984375) + b;
+			return c * (7.5625 * (t -= 2.625 / 2.75) * t + .984375) + b;
 		}
 	},
 	inOutBounce: function inOutBounce(t, b, c, d) {
-		if (t < d / 2) {
-			return this.inBounce(t * 2, 0, c, d) * 0.5 + b;
-		}return this.outBounce(t * 2 - d, 0, c, d) * 0.5 + c * 0.5 + b;
+		if (t < d / 2) return this.inBounce(t * 2, 0, c, d) * .5 + b;
+		return this.outBounce(t * 2 - d, 0, c, d) * .5 + c * .5 + b;
 	},
 	outHard: function outHard(t, b, c, d) {
 		var ts = (t /= d) * t;
@@ -1424,7 +1379,6 @@ var easings = {
 	}
 };
 
-exports.easings = easings;
 function mainLoop() {
 	if (!anims.length) {
 		// no animations left, stop polling
@@ -1487,90 +1441,100 @@ function addToQueue(tween) {
 	}
 }
 
-var Tween = exports.Tween = (function () {
+var Tween = exports.Tween = function () {
 	function Tween(options) {
 		_classCallCheck(this, Tween);
 
 		this.options = extend({}, defaults, options);
 
 		var e = this.options.easing;
-		if (typeof e == "string") {
-			if (!easings[e]) throw "Unknown \"" + e + "\" easing function";
+		if (typeof e == 'string') {
+			if (!easings[e]) throw 'Unknown "' + e + '" easing function';
 			this.options.easing = easings[e];
 		}
 
-		if (typeof this.options.easing != "function") throw "Easing should be a function";
+		if (typeof this.options.easing != 'function') throw 'Easing should be a function';
 
-		this._id = "tw" + idCounter++;
+		this._id = 'tw' + idCounter++;
 
 		if (this.options.autostart) {
 			this.start();
 		}
 	}
 
-	_createClass(Tween, {
-		start: {
+	/**
+  * Start animation from the beginning
+  */
 
-			/**
-    * Start animation from the beginning
-    */
 
-			value: function start() {
-				if (!this.animating) {
-					this.pos = 0;
-					this.startTime = time() + (this.options.delay || 0);
-					this.infinite = this.options.duration === "infinite";
-					this.endTime = this.infinite ? 0 : this.startTime + this.options.duration;
-					this.animating = true;
-					this.options.start(this);
-					addToQueue(this);
-				}
-
-				return this;
+	_createClass(Tween, [{
+		key: 'start',
+		value: function start() {
+			if (!this.animating) {
+				this.pos = 0;
+				this.startTime = time() + (this.options.delay || 0);
+				this.infinite = this.options.duration === 'infinite';
+				this.endTime = this.infinite ? 0 : this.startTime + this.options.duration;
+				this.animating = true;
+				this.options.start(this);
+				addToQueue(this);
 			}
-		},
-		stop: {
 
-			/**
-    * Stop animation
-    */
+			return this;
+		}
 
-			value: function stop() {
-				if (this.animating) {
-					this.animating = false;
-					if (this.options.complete) {
-						this.options.complete(this);
-					}
+		/**
+   * Stop animation
+   */
+
+	}, {
+		key: 'stop',
+		value: function stop() {
+			if (this.animating) {
+				this.animating = false;
+				if (this.options.complete) {
+					this.options.complete(this);
 				}
-				return this;
 			}
-		},
-		toggle: {
-			value: function toggle() {
-				if (this.animating) {
-					this.stop();
-				} else {
-					this.start();
-				}
+			return this;
+		}
+	}, {
+		key: 'toggle',
+		value: function toggle() {
+			if (this.animating) {
+				this.stop();
+			} else {
+				this.start();
 			}
 		}
-	});
+	}]);
 
 	return Tween;
-})();
+}();
 
 function tween(options) {
 	return new Tween(options);
 }
 
+/**
+ * Get or set default value
+ * @param  {String} name
+ * @param  {Object} value
+ * @return {Object}
+ */
 function defaults(name, value) {
-	if (typeof value != "undefined") {
+	if (typeof value != 'undefined') {
 		defaults[name] = value;
 	}
 
 	return defaults[name];
 }
 
+/**
+ * Returns all active animation objects.
+ * For debugging mostly
+ * @return {Array}
+ */
 function _all() {
 	return anims;
 }
@@ -1581,71 +1545,46 @@ function stop() {
 	}
 
 	anims.length = 0;
-}
+};
 
-;
 },{}],7:[function(require,module,exports){
-"use strict";
-
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 /**
  * Module that creates list of action hints and highlights items when specified
  * action is performed
  */
 "use strict";
 
-var dom = _interopRequireWildcard(require("../dom"));
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.defaultOptions = undefined;
 
-var _utils = require("../utils");
+exports.default = function (hints, scenario) {
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-var template = _utils.template;
-var find = _utils.find;
-var toArray = _utils.toArray;
-var extend = _utils.extend;
-var defaultOptions = {
-	wrapperTemplate: "<ul class=\"CodeMirror-outline\"><%= content %></ul>",
-	itemTemplate: "<li data-action-id=\"<%= id %>\" class=\"CodeMirror-outline__item\"><%= title %></li>",
-	itemClass: "CodeMirror-outline__item",
-	selectedClass: "CodeMirror-outline__item_selected"
-};
-
-exports.defaultOptions = defaultOptions;
-/**
- * @param {Object} hints
- * @param {Scenario} scenario
- * @param {Object} options
- */
-
-exports["default"] = function (hints, scenario) {
-	var options = arguments[2] === undefined ? {} : arguments[2];
-
-	options = extend({}, defaultOptions, options);
+	options = (0, _utils.extend)({}, defaultOptions, options);
 
 	var hintKeys = Object.keys(hints).sort(function (a, b) {
 		return a - b;
 	});
 
-	var itemTemplate = template(options.itemTemplate);
+	var itemTemplate = (0, _utils.template)(options.itemTemplate);
 	var items = hintKeys.map(function (key) {
 		return itemTemplate({ title: hints[key], id: key });
 	});
 
-	var el = dom.toDOM(template(options.wrapperTemplate, {
-		content: items.join("")
+	var el = dom.toDOM((0, _utils.template)(options.wrapperTemplate, {
+		content: items.join('')
 	}));
 
 	if (options.target) {
 		options.target.appendChild(el);
 	}
 
-	scenario.on("action", function (id) {
-		var items = toArray(el.querySelectorAll("." + options.itemClass));
-		var matchedItem = find(items, function (elem) {
-			return elem.getAttribute("data-action-id") == id;
+	scenario.on('action', function (id) {
+		var items = (0, _utils.toArray)(el.querySelectorAll('.' + options.itemClass));
+		var matchedItem = (0, _utils.find)(items, function (elem) {
+			return elem.getAttribute('data-action-id') == id;
 		});
 
 		if (matchedItem) {
@@ -1654,60 +1593,85 @@ exports["default"] = function (hints, scenario) {
 			});
 			matchedItem.classList.add(options.selectedClass);
 		}
-	}).on("stop", function () {
-		toArray(el.querySelectorAll("." + options.itemClass)).forEach(function (item) {
+	}).on('stop', function () {
+		(0, _utils.toArray)(el.querySelectorAll('.' + options.itemClass)).forEach(function (item) {
 			return item.classList.remove(options.selectedClass);
 		});
 	});
 
 	return el;
 };
+
+var _dom = require('../dom');
+
+var dom = _interopRequireWildcard(_dom);
+
+var _utils = require('../utils');
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var defaultOptions = exports.defaultOptions = {
+	wrapperTemplate: '<ul class="CodeMirror-outline"><%= content %></ul>',
+	itemTemplate: '<li data-action-id="<%= id %>" class="CodeMirror-outline__item"><%= title %></li>',
+	itemClass: 'CodeMirror-outline__item',
+	selectedClass: 'CodeMirror-outline__item_selected'
+};
+
+/**
+ * @param {Object} hints
+ * @param {Scenario} scenario
+ * @param {Object} options
+ */
+;
+
 },{"../dom":2,"../utils":5}],8:[function(require,module,exports){
-"use strict";
-
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
-
-exports.show = show;
-exports.hide = hide;
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 /**
  * Shows fake prompt dialog with interactive value typing
  */
 "use strict";
 
-var tween = _interopRequire(require("../vendor/tween"));
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.actions = undefined;
 
-var _utils = require("../utils");
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var extend = _utils.extend;
-var template = _utils.template;
-var has3d = _utils.has3d;
-var prefixed = _utils.prefixed;
+exports.show = show;
+exports.hide = hide;
 
-var dom = _interopRequireWildcard(require("../dom"));
+var _tween = require('../vendor/tween');
+
+var _tween2 = _interopRequireDefault(_tween);
+
+var _utils = require('../utils');
+
+var _dom = require('../dom');
+
+var dom = _interopRequireWildcard(_dom);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var dialogInstance = null;
 var bgInstance = null;
 var lastTween = null;
 
-var actions = {
+var actions = exports.actions = {
 	prompt: function prompt(options, editor, next, timer) {
-		options = extend({
-			title: "Enter something",
+		options = (0, _utils.extend)({
+			title: 'Enter something',
 			delay: 80, // delay between character typing
 			typeDelay: 1000, // time to wait before typing text
 			hideDelay: 2000 // time to wait before hiding prompt dialog
-		}, wrap("text", options));
+		}, wrap('text', options));
 
 		show(options.title, editor.getWrapperElement(), function (dialog) {
 			timer(function () {
-				typeText(dialog.querySelector(".CodeMirror-prompt__input"), options, timer, function () {
+				typeText(dialog.querySelector('.CodeMirror-prompt__input'), options, timer, function () {
 					timer(function () {
 						hide(next);
 					}, options.hideDelay);
@@ -1717,12 +1681,10 @@ var actions = {
 	}
 };
 
-exports.actions = actions;
-
 function show(text, target, callback) {
 	hide();
-	dialogInstance = dom.toDOM("<div class=\"CodeMirror-prompt\">\n\t\t<div class=\"CodeMirror-prompt__title\">" + text + "</div>\n\t\t<input type=\"text\" name=\"prompt\" class=\"CodeMirror-prompt__input\" readonly=\"readonly\" />\n\t\t</div>");
-	bgInstance = dom.toDOM("<div class=\"CodeMirror-prompt__shade\"></div>");
+	dialogInstance = dom.toDOM('<div class="CodeMirror-prompt">\n\t\t<div class="CodeMirror-prompt__title">' + text + '</div>\n\t\t<input type="text" name="prompt" class="CodeMirror-prompt__input" readonly="readonly" />\n\t\t</div>');
+	bgInstance = dom.toDOM('<div class="CodeMirror-prompt__shade"></div>');
 
 	target.appendChild(dialogInstance);
 	target.appendChild(bgInstance);
@@ -1749,16 +1711,16 @@ function hide(callback) {
  * @param {Object} options 
  */
 function animateShow(dialog, bg) {
-	var options = arguments[2] === undefined ? {} : arguments[2];
+	var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
-	var cssTransform = prefixed("transform");
+	var cssTransform = (0, _utils.prefixed)('transform');
 	var dialogStyle = dialog.style;
 	var bgStyle = bg.style;
 	var height = dialog.offsetHeight;
-	var tmpl = template(has3d ? "translate3d(0, <%= pos %>, 0)" : "translate(0, <%= pos %>)");
+	var tmpl = (0, _utils.template)(_utils.has3d ? 'translate3d(0, <%= pos %>, 0)' : 'translate(0, <%= pos %>)');
 
 	bgStyle.opacity = 0;
-	tween({
+	(0, _tween2.default)({
 		duration: 200,
 		step: function step(pos) {
 			bgStyle.opacity = pos;
@@ -1767,12 +1729,13 @@ function animateShow(dialog, bg) {
 
 	dialogStyle[cssTransform] = tmpl({ pos: -height });
 
-	return lastTween = tween({
+	return lastTween = (0, _tween2.default)({
 		duration: 400,
-		easing: "outCubic",
+		easing: 'outCubic',
 		step: function step(pos) {
-			dialogStyle[cssTransform] = tmpl({ pos: -height * (1 - pos) + "px" });
+			dialogStyle[cssTransform] = tmpl({ pos: -height * (1 - pos) + 'px' });
 		},
+
 		complete: function complete() {
 			lastTween = null;
 			options.complete && options.complete(dialog, bg);
@@ -1789,13 +1752,13 @@ function animateHide(dialog, bg, options) {
 	var dialogStyle = dialog.style;
 	var bgStyle = bg.style;
 	var height = dialog.offsetHeight;
-	var cssTransform = prefixed("transform");
-	var tmpl = template(has3d ? "translate3d(0, <%= pos %>, 0)" : "translate(0, <%= pos %>)");
+	var cssTransform = (0, _utils.prefixed)('transform');
+	var tmpl = (0, _utils.template)(_utils.has3d ? 'translate3d(0, <%= pos %>, 0)' : 'translate(0, <%= pos %>)');
 
-	return tween({
+	return (0, _tween2.default)({
 		duration: 200,
 		step: function step(pos) {
-			dialogStyle[cssTransform] = tmpl({ pos: -height * pos + "px" });
+			dialogStyle[cssTransform] = tmpl({ pos: -height * pos + 'px' });
 			bgStyle.opacity = 1 - pos;
 		},
 		complete: function complete() {
@@ -1806,7 +1769,7 @@ function animateHide(dialog, bg, options) {
 }
 
 function typeText(target, options, timer, next) {
-	var chars = options.text.split("");
+	var chars = options.text.split('');
 	timer(function perform() {
 		target.value += chars.shift();
 		if (chars.length) {
@@ -1818,48 +1781,51 @@ function typeText(target, options, timer, next) {
 }
 
 function wrap(key, value) {
-	return typeof value === "object" ? value : _defineProperty({}, key, value);
+	return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : _defineProperty({}, key, value);
 }
+
 },{"../dom":2,"../utils":5,"../vendor/tween":6}],9:[function(require,module,exports){
-"use strict";
-
-var _interopRequireWildcard = function (obj) { return obj && obj.__esModule ? obj : { "default": obj }; };
-
-var _interopRequire = function (obj) { return obj && obj.__esModule ? obj["default"] : obj; };
-
-var _defineProperty = function (obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); };
-
-exports.show = show;
-exports.hide = hide;
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
 /**
  * Extension that allows authors to display context tooltips bound to specific
  * positions
  */
 "use strict";
 
-var tween = _interopRequire(require("../vendor/tween"));
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.actions = exports.alignDefaults = undefined;
 
-var _utils = require("../utils");
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-var extend = _utils.extend;
-var prefixed = _utils.prefixed;
-var makePos = _utils.makePos;
-var has3d = _utils.has3d;
+exports.show = show;
+exports.hide = hide;
 
-var dom = _interopRequireWildcard(require("../dom"));
+var _tween = require('../vendor/tween');
+
+var _tween2 = _interopRequireDefault(_tween);
+
+var _utils = require('../utils');
+
+var _dom = require('../dom');
+
+var dom = _interopRequireWildcard(_dom);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 var instance = null;
 var lastTween = null;
 
-var alignDefaults = {
+var alignDefaults = exports.alignDefaults = {
 	/** CSS selector for getting popup tail */
-	tailClass: "CodeMirror-tooltip__tail",
+	tailClass: 'CodeMirror-tooltip__tail',
 
 	/** Class name for switching tail/popup position relative to target point */
-	belowClass: "CodeMirror-tooltip_below",
+	belowClass: 'CodeMirror-tooltip_below',
 
 	/** Min distance between popup and viewport */
 	popupMargin: 5,
@@ -1868,17 +1834,16 @@ var alignDefaults = {
 	tailMargin: 11
 };
 
-exports.alignDefaults = alignDefaults;
-var actions = {
+var actions = exports.actions = {
 	/**
   * Shows tooltip with given text, wait for `options.wait`
   * milliseconds then hides tooltip
   */
 	tooltip: function tooltip(options, editor, next, timer) {
-		options = extend({
+		options = (0, _utils.extend)({
 			wait: 4000, // time to wait before hiding tooltip
-			pos: "caret" // position where tooltip should point to
-		}, wrap("text", options));
+			pos: 'caret' // position where tooltip should point to
+		}, wrap('text', options));
 
 		var pos = resolvePosition(options.pos, editor);
 		show(options.text, pos, function () {
@@ -1890,18 +1855,20 @@ var actions = {
 		});
 	},
 
+
 	/**
   * Shows tooltip with specified text. This tooltip should be explicitly 
   * hidden with `hideTooltip` action
   */
 	showTooltip: function showTooltip(options, editor, next, timer) {
-		options = extend({
-			pos: "caret" // position where tooltip should point to
-		}, wrap("text", options));
+		options = (0, _utils.extend)({
+			pos: 'caret' // position where tooltip should point to
+		}, wrap('text', options));
 
 		show(options.text, resolvePosition(options.pos, editor));
 		next();
 	},
+
 
 	/**
   * Hides tooltip, previously shown by 'showTooltip' action
@@ -1911,14 +1878,12 @@ var actions = {
 	}
 };
 
-exports.actions = actions;
-
 function show(text, pos, callback) {
 	hide();
 
-	instance = dom.toDOM("<div class=\"CodeMirror-tooltip\">\n\t\t<div class=\"CodeMirror-tooltip__content\">" + text + "</div>\n\t\t<div class=\"CodeMirror-tooltip__tail\"></div>\n\t\t</div>");
+	instance = dom.toDOM('<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>\n\t\t</div>');
 
-	dom.css(instance, prefixed("transform"), "scale(0)");
+	dom.css(instance, (0, _utils.prefixed)('transform'), 'scale(0)');
 	document.body.appendChild(instance);
 
 	alignPopupWithTail(instance, { position: pos });
@@ -1945,16 +1910,16 @@ function hide(callback) {
  * @param {Object} options
  */
 function alignPopupWithTail(popup) {
-	var options = arguments[1] === undefined ? {} : arguments[1];
+	var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-	options = extend({}, alignDefaults, options);
+	options = (0, _utils.extend)({}, alignDefaults, options);
 
 	dom.css(popup, {
 		left: 0,
 		top: 0
 	});
 
-	var tail = popup.querySelector("." + options.tailClass);
+	var tail = popup.querySelector('.' + options.tailClass);
 
 	var resultX = 0,
 	    resultY = 0;
@@ -1975,7 +1940,7 @@ function alignPopupWithTail(popup) {
 		resultY = Math.max(0, pos.y - height - tail.offsetHeight);
 		isTop = true;
 	} else {
-		// place below target position
+		// place below target position 
 		resultY = pos.y + tail.offsetHeight;
 		isTop = false;
 	}
@@ -1983,7 +1948,7 @@ function alignPopupWithTail(popup) {
 	// calculate tail position
 	var tailMinLeft = options.tailMargin;
 	var tailMaxLeft = width - options.tailMargin;
-	tail.style.left = Math.min(tailMaxLeft, Math.max(tailMinLeft, pos.x - resultX - vp.left)) + "px";
+	tail.style.left = Math.min(tailMaxLeft, Math.max(tailMinLeft, pos.x - resultX - vp.left)) + 'px';
 
 	dom.css(popup, {
 		left: resultX,
@@ -1998,33 +1963,33 @@ function alignPopupWithTail(popup) {
  * @param {Object} options 
  */
 function animateShow(elem) {
-	var options = arguments[1] === undefined ? {} : arguments[1];
+	var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-	options = extend({}, alignDefaults, options);
-	var cssOrigin = prefixed("transform-origin");
-	var cssTransform = prefixed("transform");
+	options = (0, _utils.extend)({}, alignDefaults, options);
+	var cssOrigin = (0, _utils.prefixed)('transform-origin');
+	var cssTransform = (0, _utils.prefixed)('transform');
 	var style = elem.style;
 
-	var tail = elem.querySelector("." + options.tailClass);
-	var xOrigin = dom.css(tail, "left");
+	var tail = elem.querySelector('.' + options.tailClass);
+	var xOrigin = dom.css(tail, 'left');
 	var yOrigin = tail.offsetTop;
 	if (elem.classList.contains(options.belowClass)) {
 		yOrigin -= tail.offsetHeight;
 	}
 
-	yOrigin += "px";
+	yOrigin += 'px';
 
-	style[cssOrigin] = xOrigin + " " + yOrigin;
-	var prefix = has3d ? "translateZ(0) " : "";
+	style[cssOrigin] = xOrigin + ' ' + yOrigin;
+	var prefix = _utils.has3d ? 'translateZ(0) ' : '';
 
-	return lastTween = tween({
+	return lastTween = (0, _tween2.default)({
 		duration: 800,
-		easing: "outElastic",
+		easing: 'outElastic',
 		step: function step(pos) {
-			style[cssTransform] = prefix + "scale(" + pos + ")";
+			style[cssTransform] = prefix + 'scale(' + pos + ')';
 		},
 		complete: function complete() {
-			style[cssTransform] = "none";
+			style[cssTransform] = 'none';
 			lastTween = null;
 			options.complete && options.complete(elem);
 		}
@@ -2038,9 +2003,9 @@ function animateShow(elem) {
 function animateHide(elem, options) {
 	var style = elem.style;
 
-	return tween({
+	return (0, _tween2.default)({
 		duration: 200,
-		easing: "linear",
+		easing: 'linear',
 		step: function step(pos) {
 			style.opacity = 1 - pos;
 		},
@@ -2059,33 +2024,33 @@ function animateHide(elem, options) {
  * properties
  */
 function resolvePosition(pos, editor) {
-	if (pos === "caret") {
+	if (pos === 'caret') {
 		// get absolute position of current caret position
 		return sanitizeCaretPos(editor.cursorCoords(true));
 	}
 
-	if (typeof pos === "object") {
-		if ("x" in pos && "y" in pos) {
+	if ((typeof pos === 'undefined' ? 'undefined' : _typeof(pos)) === 'object') {
+		if ('x' in pos && 'y' in pos) {
 			// passed absolute coordinates
 			return pos;
 		}
 
-		if ("left" in pos && "top" in pos) {
+		if ('left' in pos && 'top' in pos) {
 			// passed absolute coordinates
 			return sanitizeCaretPos(pos);
 		}
 	}
 
-	pos = makePos(pos, editor);
+	pos = (0, _utils.makePos)(pos, editor);
 	return sanitizeCaretPos(editor.charCoords(pos));
 }
 
 function sanitizeCaretPos(pos) {
-	if ("left" in pos) {
+	if ('left' in pos) {
 		pos.x = pos.left;
 	}
 
-	if ("top" in pos) {
+	if ('top' in pos) {
 		pos.y = pos.top;
 	}
 
@@ -2093,7 +2058,9 @@ function sanitizeCaretPos(pos) {
 }
 
 function wrap(key, value) {
-	return typeof value === "object" ? value : _defineProperty({}, key, value);
+	return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : _defineProperty({}, key, value);
 }
-},{"../dom":2,"../utils":5,"../vendor/tween":6}]},{},[3])(3)
-});
+
+},{"../dom":2,"../utils":5,"../vendor/tween":6}]},{},[3])
+
+//# sourceMappingURL=movie.js.map

@@ -1,15 +1,25 @@
 {
-  "name": "codemirror-movie",
-  "description": "CodeMirror Movie",
-  "version": "1.2.1",
+  "name": "codemirror-movie-react",
+  "description": "CodeMirror Movie React",
+  "version": "2.0.0",
   "main": "./dist/movie.js",
   "scripts": {
-    "prepublish": "./node_modules/.bin/gulp"
+    "prepublish": "gulp",
+    "build": "gulp",
+    "watch": "gulp watch"
+  },
+  "dependencies": {
+    "codemirror": "^5.33.0"
   },
   "devDependencies": {
-    "codemirror": "^4.13.0",
-    "gulp": "^3.8.11",
-    "gulp-minify-css": "^0.5.1",
-    "js-bundler": "git+https://github.com/sergeche/js-bundler.git#v1.0.0"
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^16.1.1",
+    "gulp": "^3.9.1",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-sourcemaps": "^2.6.4",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }

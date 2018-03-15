@@ -1,22 +1,34 @@
-var gulp = require('gulp');
-var jsBundler = require('js-bundler');
-var minifyCSS = require('gulp-minify-css');
+const gulp = require('gulp')
+const browserify = require('browserify')
+const babelify = require('babelify')
+const source = require('vinyl-source-stream')
+const buffer = require('vinyl-buffer')
+const minifyCSS = require('gulp-minify-css')
+const sourcemaps = require('gulp-sourcemaps')
 
-gulp.task('js', function() {
-	return gulp.src('./lib/movie.js')
-		.pipe(jsBundler({standalone: 'CodeMirrorMovie'}))
-		.pipe(gulp.dest('./dist'));
+
+gulp.task('js', () => {
+	return browserify('lib/movie.js', {debug: true})
+		.transform('babelify', {presets: ['env']})
+		.bundle()
+		.pipe(source('movie.js'))
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+		.pipe(sourcemaps.write('./'))
+		// Gulp Plugins Here
+		.pipe(gulp.dest('dist'));
 });
 
-gulp.task('css', function() {
+gulp.task('css', () => {
 	return gulp.src('./lib/movie.css')
 		.pipe(minifyCSS())
 		.pipe(gulp.dest('./dist'));
 });
 
-gulp.task('watch', function() {
-	jsBundler.watch({sourceMap: true});
+gulp.task('watch', () => {
+// 	jsBundler.watch({sourceMap: true});
 	gulp.watch('./lib/**/*.js', ['js']);
 });
+
 
 gulp.task('default', ['js', 'css']);
