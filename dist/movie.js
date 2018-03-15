@@ -592,12 +592,7 @@ function parseMovieDefinition(text) {
 	// read movie definition
 	readLines(parts[1]).filter(skipComment).forEach(function (line) {
 		// do we have outline definition here?
-		line = line.replace(options.outlineSeparator, function (str, title) {
-			if (options.prettifyKeys) {
-				outline[scenario.length] = prettifyKeyBindings(title.trim());
-			}
-			return '';
-		});
+		line = line.replace(options.outlineSeparator, '');
 
 		var sd = line.match(reDef);
 		if (!sd) {
