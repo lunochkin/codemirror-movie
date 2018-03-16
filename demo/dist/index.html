@@ -17,14 +17,15 @@
 </style>
 </head>
 <body>
-<h1>CodeMirror Movie</h1>
+	<h1>CodeMirror Movie</h1>
 
-<!-- 
-In textarea, separate initial editor content and movie scenario
-with @@@ separator.
+	<!-- 
+	In textarea, separate initial editor content and movie scenario
+	with @@@ separator.
 
-Use | character to indicate initial caret position
--->
+	Use | character to indicate initial caret position
+	-->
+
 <textarea id="code" name="code">
 &lt;!doctype html&gt;
 &lt;html lang="en"&gt;
@@ -51,26 +52,8 @@ tooltip: {text: "Sample tooltip 5", wait: 2000}
 # Perform CodeMirror pre-defined command
 # run: {command: "goWordLeft", times: 2} ::: Move word left
 </textarea>
+
 	<button style="font-size: 2em;margin: 10px auto;display: block;">Play</button>
-	<script>
-		var movie = CodeMirror.movie('code');
-		
-		// Create simple UI to interact with movie
-		var btn = document.getElementsByTagName('button')[0];
-		btn.onclick = function() {
-			if (movie.state == 'play') {
-				movie.pause();
-				this.innerHTML = 'Play';
-			} else {
-				movie.play();
-				this.innerHTML = 'Pause';
-			}
-		};
-		
-		// Listen to events to change UI state
-		movie.on('stop', function(name) {
-			btn.innerHTML = 'Play';
-		});
-	</script>
+
 </body>
 </html>

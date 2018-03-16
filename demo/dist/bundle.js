@@ -1,11 +1,42 @@
 (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 'use strict';
 
-require('../../lib/movie');
+var _movie = require('../../lib/movie');
 
-console.log('window.CodeMirror: ', window.CodeMirror);
+var _movie2 = _interopRequireDefault(_movie);
 
-},{"../../lib/movie":4}],2:[function(require,module,exports){
+var _codemirror = require('codemirror/lib/codemirror');
+
+var _codemirror2 = _interopRequireDefault(_codemirror);
+
+require('codemirror/mode/css/css');
+
+require('codemirror/mode/xml/xml');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+document.addEventListener('DOMContentLoaded', function () {
+  var movie = (0, _movie2.default)(_codemirror2.default, 'code');
+
+  // Create simple UI to interact with movie
+  var btn = document.getElementsByTagName('button')[0];
+  btn.onclick = function () {
+    if (movie.state == 'play') {
+      movie.pause();
+      this.innerHTML = 'Play';
+    } else {
+      movie.play();
+      this.innerHTML = 'Pause';
+    }
+  };
+
+  // Listen to events to change UI state
+  movie.on('stop', function (name) {
+    btn.innerHTML = 'Play';
+  });
+});
+
+},{"../../lib/movie":4,"codemirror/lib/codemirror":10,"codemirror/mode/css/css":11,"codemirror/mode/xml/xml":12}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -401,23 +432,15 @@ var _scenario = require('./scenario');
 
 var _scenario2 = _interopRequireDefault(_scenario);
 
-var _codemirror = require('codemirror/lib/codemirror');
-
-var _codemirror2 = _interopRequireDefault(_codemirror);
-
-require('codemirror/mode/css/css');
-
-require('codemirror/mode/xml/xml');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var ios = /AppleWebKit/.test(navigator.userAgent) && /Mobile\/\w+/.test(navigator.userAgent); /**
-                                                                                               * A high-level library interface for creating scenarios over textarea
-                                                                                               * element. The <code>CodeMirror.movie</code> takes reference to textarea
-                                                                                               * element (or its ID) and parses its content for initial content value,
-                                                                                               * scenario.
-                                                                                               */
-
+/**
+ * A high-level library interface for creating scenarios over textarea
+ * element. The <code>CodeMirror.movie</code> takes reference to textarea
+ * element (or its ID) and parses its content for initial content value,
+ * scenario.
+ */
+var ios = /AppleWebKit/.test(navigator.userAgent) && /Mobile\/\w+/.test(navigator.userAgent);
 var mac = ios || /Mac/.test(navigator.platform);
 
 var macCharMap = {
@@ -472,6 +495,7 @@ var defaultOptions = exports.defaultOptions = {
 
 /**
  * High-level function to create movie instance on textarea.
+ * @param {CodeMirror}
  * @param {Element} target Reference to textarea, either <code>Element</code>
  * or string ID. It can also accept existing CodeMirror object.
  * @param {Object} movieOptions Movie options. See <code>defaultOptions</code>
@@ -479,11 +503,11 @@ var defaultOptions = exports.defaultOptions = {
  * @param {Object} editorOptions Additional options passed to CodeMirror
  * editor initializer.
  */
-function movie(target) {
-	var movieOptions = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-	var editorOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+function movie(CodeMirrorEditor, target) {
+	var movieOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+	var editorOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 
-	setupCodeMirror();
+	setupCodeMirror(CodeMirrorEditor);
 
 	if (typeof target === 'string') {
 		target = document.getElementById(target);
@@ -531,7 +555,7 @@ function movie(target) {
 	}
 
 	// create editor instance if needed
-	var editor = targetIsTextarea ? _codemirror2.default.fromTextArea(target, editorOptions) : target;
+	var editor = targetIsTextarea ? CodeMirrorEditor.fromTextArea(target, editorOptions) : target;
 
 	if (initialPos != -1) {
 		editor.setCursor(editor.posFromIndex(initialPos));
@@ -661,12 +685,12 @@ function parseMovieDefinition(text) {
 	};
 }
 
-function setupCodeMirror() {
-	if (typeof _codemirror2.default === 'undefined' || 'preventCursorMovement' in _codemirror2.default.defaults) {
+function setupCodeMirror(CodeMirrorEditor) {
+	if ('preventCursorMovement' in CodeMirrorEditor.defaults) {
 		return;
 	}
 
-	_codemirror2.default.defineOption('preventCursorMovement', false, function (cm) {
+	CodeMirrorEditor.defineOption('preventCursorMovement', false, function (cm) {
 		var handler = function handler(cm, event) {
 			return cm.getOption('readOnly') && event.preventDefault();
 		};
@@ -675,12 +699,7 @@ function setupCodeMirror() {
 	});
 }
 
-if (typeof _codemirror2.default !== 'undefined') {
-	_codemirror2.default.movie = movie;
-	window.CodeMirror = _codemirror2.default;
-}
-
-},{"./scenario":5,"./utils":6,"codemirror/lib/codemirror":10,"codemirror/mode/css/css":11,"codemirror/mode/xml/xml":12}],5:[function(require,module,exports){
+},{"./scenario":5,"./utils":6}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -793,8 +812,7 @@ var Scenario = function () {
 
 			var timer = this.requestTimer.bind(this);
 
-			var goto = function goto(actionIx) {
-				console.log('goto: ', actionIx);
+			var gotoAction = function gotoAction(actionIx) {
 				if (actionIx >= _this._actions.length) {
 					return timer(function () {
 						_this.stop();
@@ -805,16 +823,35 @@ var Scenario = function () {
 
 				var action = parseActionCall(_this._actions[actionIx]);
 
+				var prev = null;
+				for (var i = actionIx - 1; i >= 0; i--) {
+					var oneAction = parseActionCall(_this._actions[i]);
+					if (oneAction.name === 'tooltip') {
+						prev = function prev() {
+							return gotoAction(actionIx - 1);
+						};
+						break;
+					}
+				}
+
+				var next = null;
+				for (var _i = actionIx + 1; _i < _this._actions.length; _i++) {
+					var _oneAction = parseActionCall(_this._actions[_i]);
+					if (_oneAction.name === 'tooltip') {
+						next = function next() {
+							return gotoAction(actionIx + 1);
+						};
+					}
+				}
+
+				console.log('next: ', next, 'prev: ', prev);
+
 				if (action.name in actionsDefinition) {
 					actionsDefinition[action.name]({
 						options: action.options,
 						editor: editor,
-						next: function next() {
-							return goto(actionIx + 1);
-						},
-						prev: function prev() {
-							return goto(actionIx - 1);
-						},
+						next: next,
+						prev: prev,
 						timer: timer
 					});
 				} else {
@@ -826,7 +863,7 @@ var Scenario = function () {
 			this._editor.setOption('readOnly', true);
 			this.trigger('play');
 			timer(function () {
-				return goto(0);
+				return gotoAction(0);
 			}, defaultOptions.beforeDelay);
 		}
 
@@ -1815,8 +1852,8 @@ var actions = exports.actions = {
 	tooltip: function tooltip(_ref) {
 		var options = _ref.options,
 		    editor = _ref.editor,
-		    next = _ref.next,
 		    prev = _ref.prev,
+		    next = _ref.next,
 		    timer = _ref.timer;
 
 		options = (0, _utils.extend)({
@@ -1825,20 +1862,22 @@ var actions = exports.actions = {
 		}, wrap('text', options));
 
 		var pos = resolvePosition(options.pos, editor);
-		show(options.text, pos, function () {
+		show({ text: options.text, prev: prev, next: next }, pos, function () {
 			// timer(function() {
 			// 	hide(() => timer(next));
 			// }, options.wait);
 
-			instance.querySelector('.CodeMirror-tooltip__prev').addEventListener('click', function () {
-				hide(prev);
-				console.log('prev');
-			});
+			if (prev) {
+				instance.querySelector('.CodeMirror-tooltip__prev').addEventListener('click', function () {
+					hide(prev);
+				});
+			}
 
-			instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
-				hide(next);
-				console.log('next');
-			});
+			if (next) {
+				instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
+					hide(next);
+				});
+			}
 		});
 	},
 
@@ -1850,6 +1889,7 @@ var actions = exports.actions = {
 	showTooltip: function showTooltip(_ref2) {
 		var options = _ref2.options,
 		    editor = _ref2.editor,
+		    prev = _ref2.prev,
 		    next = _ref2.next,
 		    timer = _ref2.timer;
 
@@ -1857,7 +1897,7 @@ var actions = exports.actions = {
 			pos: 'caret' // position where tooltip should point to
 		}, wrap('text', options));
 
-		show(options.text, resolvePosition(options.pos, editor));
+		show({ text: options.text, prev: prev, next: next }, resolvePosition(options.pos, editor));
 		next();
 	},
 
@@ -1875,10 +1915,26 @@ var actions = exports.actions = {
 	}
 };
 
-function show(text, pos, callback) {
+function show(_ref4, pos, callback) {
+	var text = _ref4.text,
+	    prev = _ref4.prev,
+	    next = _ref4.next;
+
 	hide();
 
-	instance = dom.toDOM('<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>\n\t\t<button class="CodeMirror-tooltip__prev">prev</button>\n\t\t<button class="CodeMirror-tooltip__next">next</button>\n\t</div>');
+	var html = '<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>';
+
+	if (prev) {
+		html += '<button class="CodeMirror-tooltip__prev">forward</button>';
+	}
+
+	if (next) {
+		html += '<button class="CodeMirror-tooltip__next">backward</button>';
+	}
+
+	html += '</div>';
+
+	instance = dom.toDOM(html);
 
 	dom.css(instance, (0, _utils.prefixed)('transform'), 'scale(0)');
 	document.body.appendChild(instance);
