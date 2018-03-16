@@ -94,9 +94,18 @@ var App = function (_React$Component) {
         'div',
         null,
         _react2.default.createElement(
-          'h1',
-          null,
-          'CodeMirror Movie'
+          'header',
+          { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center' } },
+          _react2.default.createElement(
+            'h1',
+            null,
+            'CodeMirror Movie'
+          ),
+          _react2.default.createElement(
+            'a',
+            { href: 'https://github.com/lunochkin/codemirror-movie' },
+            _react2.default.createElement('img', { width: '40', src: 'https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png' })
+          )
         ),
         _react2.default.createElement(_reactCodemirror.UnControlled, {
           editorDidMount: function editorDidMount(editor) {
