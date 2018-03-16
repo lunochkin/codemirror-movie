@@ -46,7 +46,7 @@ var App = function (_React$Component) {
     _this.movie = null;
 
     _this.state = {
-      title: 'Play'
+      playing: false
     };
 
     _this.handleClick = _this.handleClick.bind(_this);
@@ -63,7 +63,7 @@ var App = function (_React$Component) {
       // Listen to events to change UI state
       this.movie.on('stop', function (name) {
         _this2.setState({
-          title: 'Play'
+          playing: false
         });
       });
     }
@@ -75,13 +75,13 @@ var App = function (_React$Component) {
         this.movie.pause();
 
         this.setState({
-          title: 'Play'
+          playing: false
         });
       } else {
 
         this.movie.play();
         this.setState({
-          title: 'Pause'
+          playing: true
         });
       }
     }
@@ -110,7 +110,7 @@ var App = function (_React$Component) {
             lineNumbers: true
           }
         }),
-        _react2.default.createElement(
+        !this.state.playing && _react2.default.createElement(
           'button',
           {
             style: {
@@ -120,7 +120,7 @@ var App = function (_React$Component) {
             },
             onClick: this.handleClick
           },
-          this.state.title
+          'Start'
         )
       );
     }
@@ -969,6 +969,9 @@ var Scenario = function () {
 						options: action.options,
 						editor: editor,
 						next: next,
+						stop: function stop() {
+							return _this.stop();
+						},
 						prev: prev,
 						timer: timer
 					});
@@ -1972,6 +1975,7 @@ var actions = exports.actions = {
 		    editor = _ref.editor,
 		    prev = _ref.prev,
 		    next = _ref.next,
+		    stop = _ref.stop,
 		    timer = _ref.timer;
 
 		options = (0, _utils.extend)({
@@ -1994,6 +1998,10 @@ var actions = exports.actions = {
 			if (next) {
 				instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
 					hide(next);
+				});
+			} else {
+				instance.querySelector('.CodeMirror-tooltip__finish').addEventListener('click', function () {
+					hide(stop);
 				});
 			}
 		});
@@ -2048,6 +2056,8 @@ function show(_ref4, pos, callback) {
 
 	if (next) {
 		html += '<button class="CodeMirror-tooltip__next">forward</button>';
+	} else {
+		html += '<button class="CodeMirror-tooltip__finish">finish</button>';
 	}
 
 	html += '</div>';
