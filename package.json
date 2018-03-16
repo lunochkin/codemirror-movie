@@ -1,7 +1,7 @@
 {
   "name": "codemirror-movie",
   "description": "CodeMirror Movie React",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "license": "MIT",
   "main": "./dist/movie.js",
   "scripts": {
@@ -10,9 +10,7 @@
     "watch": "gulp watch",
     "demo:deploy": "gh-pages -d demo/dist"
   },
-  "dependencies": {
-    "codemirror-movie": "lunochkin/codemirror-movie#6a378f6"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
