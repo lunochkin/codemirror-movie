@@ -475,7 +475,7 @@ function movie(CodeMirrorEditor, target) {
 		target = document.getElementById(target);
 	}
 
-	var targetIsTextarea = target.nodeName.toLowerCase() === 'textarea';
+	var targetIsTextarea = target.nodeName && target.nodeName.toLowerCase() === 'textarea';
 
 	movieOptions = (0, _utils.extend)({}, defaultOptions, movieOptions);
 	editorOptions = (0, _utils.extend)({
@@ -489,21 +489,23 @@ function movie(CodeMirrorEditor, target) {
 
 	var initialValue = editorOptions.value || (targetIsTextarea ? target.value : target.getValue()) || '';
 
-	if (targetIsTextarea && movieOptions.parse) {
+	if (movieOptions.parse) {
 		(0, _utils.extend)(movieOptions, parseMovieDefinition(initialValue, movieOptions));
 		initialValue = movieOptions.value;
 		if (movieOptions.editorOptions) {
 			(0, _utils.extend)(editorOptions, movieOptions.editorOptions);
 		}
 
-		// read CM options from given textarea
-		var cmAttr = /^data\-cm\-(.+)$/i;
-		(0, _utils.toArray)(target.attributes).forEach(function (attr) {
-			var m = attr.name.match(cmAttr);
-			if (m) {
-				editorOptions[m[1]] = attr.value;
-			}
-		});
+		if (targetIsTextarea) {
+			// read CM options from given textarea
+			var cmAttr = /^data\-cm\-(.+)$/i;
+			(0, _utils.toArray)(target.attributes).forEach(function (attr) {
+				var m = attr.name.match(cmAttr);
+				if (m) {
+					editorOptions[m[1]] = attr.value;
+				}
+			});
+		}
 	}
 
 	// normalize line endings
@@ -519,7 +521,11 @@ function movie(CodeMirrorEditor, target) {
 	// create editor instance if needed
 	var editor = targetIsTextarea ? CodeMirrorEditor.fromTextArea(target, editorOptions) : target;
 
-	if (initialPos != -1) {
+	if (!targetIsTextarea) {
+		editor.setValue(initialValue.replace(/\|/g, ''));
+	}
+
+	if (initialPos !== -1) {
 		editor.setCursor(editor.posFromIndex(initialPos));
 	}
 
@@ -788,7 +794,7 @@ var Scenario = function () {
 				var prev = null;
 				for (var i = actionIx - 1; i >= 0; i--) {
 					var oneAction = parseActionCall(_this._actions[i]);
-					if (oneAction.name === 'tooltip') {
+					if (oneAction.name === 'tooltip' || oneAction.name === 'showTooltip') {
 						prev = function prev() {
 							return gotoAction(actionIx - 1);
 						};
@@ -799,7 +805,7 @@ var Scenario = function () {
 				var next = null;
 				for (var _i = actionIx + 1; _i < _this._actions.length; _i++) {
 					var _oneAction = parseActionCall(_this._actions[_i]);
-					if (_oneAction.name === 'tooltip') {
+					if (_oneAction.name === 'tooltip' || _oneAction.name === 'showTooltip') {
 						next = function next() {
 							return gotoAction(actionIx + 1);
 						};
@@ -811,6 +817,9 @@ var Scenario = function () {
 						options: action.options,
 						editor: editor,
 						next: next,
+						stop: function stop() {
+							return _this.stop();
+						},
 						prev: prev,
 						timer: timer
 					});
@@ -1814,6 +1823,7 @@ var actions = exports.actions = {
 		    editor = _ref.editor,
 		    prev = _ref.prev,
 		    next = _ref.next,
+		    stop = _ref.stop,
 		    timer = _ref.timer;
 
 		options = (0, _utils.extend)({
@@ -1836,6 +1846,10 @@ var actions = exports.actions = {
 			if (next) {
 				instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
 					hide(next);
+				});
+			} else {
+				instance.querySelector('.CodeMirror-tooltip__finish').addEventListener('click', function () {
+					hide(stop);
 				});
 			}
 		});
@@ -1885,11 +1899,13 @@ function show(_ref4, pos, callback) {
 	var html = '<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>';
 
 	if (prev) {
-		html += '<button class="CodeMirror-tooltip__prev">forward</button>';
+		html += '<button class="CodeMirror-tooltip__prev">backward</button>';
 	}
 
 	if (next) {
-		html += '<button class="CodeMirror-tooltip__next">backward</button>';
+		html += '<button class="CodeMirror-tooltip__next">forward</button>';
+	} else {
+		html += '<button class="CodeMirror-tooltip__finish">finish</button>';
 	}
 
 	html += '</div>';

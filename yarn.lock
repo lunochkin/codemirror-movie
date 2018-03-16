@@ -992,6 +992,10 @@ cloneable-readable@^1.0.0:
     process-nextick-args "^2.0.0"
     readable-stream "^2.3.5"
 
+codemirror-movie@lunochkin/codemirror-movie#6a378f6:
+  version "2.0.0"
+  resolved "https://codeload.github.com/lunochkin/codemirror-movie/tar.gz/6a378f6b97f40f6dad9e09147647507c2fa49891"
+
 codemirror@^5.33.0:
   version "5.35.0"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.35.0.tgz#280653d495455bc66aa87e6284292b02775ba878"

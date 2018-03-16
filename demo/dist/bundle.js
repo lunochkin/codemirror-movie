@@ -955,7 +955,7 @@ var Scenario = function () {
 				var prev = null;
 				for (var i = actionIx - 1; i >= 0; i--) {
 					var oneAction = parseActionCall(_this._actions[i]);
-					if (oneAction.name === 'tooltip') {
+					if (oneAction.name === 'tooltip' || oneAction.name === 'showTooltip') {
 						prev = function prev() {
 							return gotoAction(actionIx - 1);
 						};
@@ -966,7 +966,7 @@ var Scenario = function () {
 				var next = null;
 				for (var _i = actionIx + 1; _i < _this._actions.length; _i++) {
 					var _oneAction = parseActionCall(_this._actions[_i]);
-					if (_oneAction.name === 'tooltip') {
+					if (_oneAction.name === 'tooltip' || _oneAction.name === 'showTooltip') {
 						next = function next() {
 							return gotoAction(actionIx + 1);
 						};
