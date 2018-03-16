@@ -2,11 +2,13 @@
   "name": "codemirror-movie-react",
   "description": "CodeMirror Movie React",
   "version": "2.0.0",
+  "license": "MIT",
   "main": "./dist/movie.js",
   "scripts": {
     "prepublish": "gulp",
     "build": "gulp",
-    "watch": "gulp watch"
+    "watch": "gulp watch",
+    "demo:deploy": "gh-pages -d demo/dist"
   },
   "dependencies": {
     "codemirror": "^5.33.0"
@@ -16,6 +18,7 @@
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "browserify": "^16.1.1",
+    "gh-pages": "^1.1.0",
     "gulp": "^3.9.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-sourcemaps": "^2.6.4",
