@@ -32,7 +32,7 @@ gulp.task('watch', () => {
 
 gulp.task('demo:js', () => {
 	return browserify('demo/src/index.js', {debug: true})
-		.transform('babelify', {presets: ['env']})
+		.transform('babelify', {presets: ['env', 'react']})
 		.bundle()
 		.pipe(source('bundle.js'))
 		.pipe(buffer())

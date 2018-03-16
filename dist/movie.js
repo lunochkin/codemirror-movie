@@ -774,9 +774,7 @@ var Scenario = function () {
 
 			var timer = this.requestTimer.bind(this);
 
-			console.log('raw actions: ', this._actions);
-
-			var goto = function goto(actionIx) {
+			var gotoAction = function gotoAction(actionIx) {
 				if (actionIx >= _this._actions.length) {
 					return timer(function () {
 						_this.stop();
@@ -787,22 +785,33 @@ var Scenario = function () {
 
 				var action = parseActionCall(_this._actions[actionIx]);
 
-				// for (const i = actionIx - 1; i >= 0; i--) {
-				// 	if (th)
-				// }
+				var prev = null;
+				for (var i = actionIx - 1; i >= 0; i--) {
+					var oneAction = parseActionCall(_this._actions[i]);
+					if (oneAction.name === 'tooltip') {
+						prev = function prev() {
+							return gotoAction(actionIx - 1);
+						};
+						break;
+					}
+				}
 
-				console.log('action: ', action);
+				var next = null;
+				for (var _i = actionIx + 1; _i < _this._actions.length; _i++) {
+					var _oneAction = parseActionCall(_this._actions[_i]);
+					if (_oneAction.name === 'tooltip') {
+						next = function next() {
+							return gotoAction(actionIx + 1);
+						};
+					}
+				}
 
 				if (action.name in actionsDefinition) {
 					actionsDefinition[action.name]({
 						options: action.options,
 						editor: editor,
-						next: function next() {
-							return goto(actionIx + 1);
-						},
-						prev: function prev() {
-							return goto(actionIx - 1);
-						},
+						next: next,
+						prev: prev,
 						timer: timer
 					});
 				} else {
@@ -814,7 +823,7 @@ var Scenario = function () {
 			this._editor.setOption('readOnly', true);
 			this.trigger('play');
 			timer(function () {
-				return goto(0);
+				return gotoAction(0);
 			}, defaultOptions.beforeDelay);
 		}
 
@@ -1803,8 +1812,8 @@ var actions = exports.actions = {
 	tooltip: function tooltip(_ref) {
 		var options = _ref.options,
 		    editor = _ref.editor,
-		    next = _ref.next,
 		    prev = _ref.prev,
+		    next = _ref.next,
 		    timer = _ref.timer;
 
 		options = (0, _utils.extend)({
@@ -1813,20 +1822,22 @@ var actions = exports.actions = {
 		}, wrap('text', options));
 
 		var pos = resolvePosition(options.pos, editor);
-		show(options.text, pos, function () {
+		show({ text: options.text, prev: prev, next: next }, pos, function () {
 			// timer(function() {
 			// 	hide(() => timer(next));
 			// }, options.wait);
 
-			instance.querySelector('.CodeMirror-tooltip__prev').addEventListener('click', function () {
-				hide(prev);
-				console.log('prev');
-			});
+			if (prev) {
+				instance.querySelector('.CodeMirror-tooltip__prev').addEventListener('click', function () {
+					hide(prev);
+				});
+			}
 
-			instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
-				hide(next);
-				console.log('next');
-			});
+			if (next) {
+				instance.querySelector('.CodeMirror-tooltip__next').addEventListener('click', function () {
+					hide(next);
+				});
+			}
 		});
 	},
 
@@ -1838,6 +1849,7 @@ var actions = exports.actions = {
 	showTooltip: function showTooltip(_ref2) {
 		var options = _ref2.options,
 		    editor = _ref2.editor,
+		    prev = _ref2.prev,
 		    next = _ref2.next,
 		    timer = _ref2.timer;
 
@@ -1845,7 +1857,7 @@ var actions = exports.actions = {
 			pos: 'caret' // position where tooltip should point to
 		}, wrap('text', options));
 
-		show(options.text, resolvePosition(options.pos, editor));
+		show({ text: options.text, prev: prev, next: next }, resolvePosition(options.pos, editor));
 		next();
 	},
 
@@ -1863,10 +1875,26 @@ var actions = exports.actions = {
 	}
 };
 
-function show(text, pos, callback) {
+function show(_ref4, pos, callback) {
+	var text = _ref4.text,
+	    prev = _ref4.prev,
+	    next = _ref4.next;
+
 	hide();
 
-	instance = dom.toDOM('<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>\n\t\t<button class="CodeMirror-tooltip__prev">prev</button>\n\t\t<button class="CodeMirror-tooltip__next">next</button>\n\t</div>');
+	var html = '<div class="CodeMirror-tooltip">\n\t\t<div class="CodeMirror-tooltip__content">' + text + '</div>\n\t\t<div class="CodeMirror-tooltip__tail"></div>';
+
+	if (prev) {
+		html += '<button class="CodeMirror-tooltip__prev">forward</button>';
+	}
+
+	if (next) {
+		html += '<button class="CodeMirror-tooltip__next">backward</button>';
+	}
+
+	html += '</div>';
+
+	instance = dom.toDOM(html);
 
 	dom.css(instance, (0, _utils.prefixed)('transform'), 'scale(0)');
 	document.body.appendChild(instance);
