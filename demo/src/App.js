@@ -43,7 +43,7 @@ class App extends React.Component {
     this.movie = null
 
     this.state = {
-      title: 'Play'
+      playing: false
     }
 
     this.handleClick = this.handleClick.bind(this)
@@ -56,7 +56,7 @@ class App extends React.Component {
     // Listen to events to change UI state
     this.movie.on('stop', name => {
       this.setState({
-        title: 'Play'
+        playing: false
       })
     })
   }
@@ -67,13 +67,13 @@ class App extends React.Component {
       this.movie.pause()
 
       this.setState({
-        title: 'Play'
+        playing: false
       })
     } else {
 
       this.movie.play()
       this.setState({
-        title: 'Pause'
+        playing: true
       })
     }
   }
@@ -95,14 +95,16 @@ class App extends React.Component {
           }}
         />
 
-        <button
-          style={{
-            fontSize: '2em',
-            margin: '10px auto',
-            display: 'block'
-          }}
-          onClick={this.handleClick}
-        >{this.state.title}</button>
+        {!this.state.playing &&
+          <button
+            style={{
+              fontSize: '2em',
+              margin: '10px auto',
+              display: 'block'
+            }}
+            onClick={this.handleClick}
+          >Start</button>
+        }
       </div>
     )
   }
