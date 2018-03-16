@@ -1,6 +1,13 @@
 (function(){function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s}return e})()({1:[function(require,module,exports){
 'use strict';
 
+require('../../lib/movie');
+
+console.log('window.CodeMirror: ', window.CodeMirror);
+
+},{"../../lib/movie":4}],2:[function(require,module,exports){
+'use strict';
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -219,7 +226,7 @@ function wrap(key, value) {
 
 exports.default = actions;
 
-},{"./utils":5}],2:[function(require,module,exports){
+},{"./utils":6}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -379,7 +386,7 @@ function setCSS(elem, params) {
 	elem.style.cssText += ';' + props.join(';');
 }
 
-},{"./utils":5}],3:[function(require,module,exports){
+},{"./utils":6}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -673,7 +680,7 @@ if (typeof _codemirror2.default !== 'undefined') {
 	window.CodeMirror = _codemirror2.default;
 }
 
-},{"./scenario":4,"./utils":5,"codemirror/lib/codemirror":9,"codemirror/mode/css/css":10,"codemirror/mode/xml/xml":11}],4:[function(require,module,exports){
+},{"./scenario":5,"./utils":6,"codemirror/lib/codemirror":10,"codemirror/mode/css/css":11,"codemirror/mode/xml/xml":12}],5:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1057,7 +1064,7 @@ function _requestTimer(fn, delay) {
 	}
 }
 
-},{"./actions":1,"./utils":5,"./widgets/prompt":7,"./widgets/tooltip":8}],5:[function(require,module,exports){
+},{"./actions":2,"./utils":6,"./widgets/prompt":8,"./widgets/tooltip":9}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1224,7 +1231,7 @@ function parseJSON(text) {
 	}
 }
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1585,7 +1592,7 @@ function stop() {
 	anims.length = 0;
 };
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1750,7 +1757,7 @@ function wrap(key, value) {
 	return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : _defineProperty({}, key, value);
 }
 
-},{"../dom":2,"../utils":5,"../vendor/tween":6}],8:[function(require,module,exports){
+},{"../dom":3,"../utils":6,"../vendor/tween":7}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2051,7 +2058,7 @@ function wrap(key, value) {
 	return (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' ? value : _defineProperty({}, key, value);
 }
 
-},{"../dom":2,"../utils":5,"../vendor/tween":6}],9:[function(require,module,exports){
+},{"../dom":3,"../utils":6,"../vendor/tween":7}],10:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -11725,7 +11732,7 @@ return CodeMirror$1;
 
 })));
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -12559,7 +12566,7 @@ CodeMirror.defineMode("css", function(config, parserConfig) {
 
 });
 
-},{"../../lib/codemirror":9}],11:[function(require,module,exports){
+},{"../../lib/codemirror":10}],12:[function(require,module,exports){
 // CodeMirror, copyright (c) by Marijn Haverbeke and others
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 
@@ -12962,6 +12969,6 @@ if (!CodeMirror.mimeModes.hasOwnProperty("text/html"))
 
 });
 
-},{"../../lib/codemirror":9}]},{},[3])
+},{"../../lib/codemirror":10}]},{},[1])
 
-//# sourceMappingURL=movie.js.map
+//# sourceMappingURL=bundle.js.map

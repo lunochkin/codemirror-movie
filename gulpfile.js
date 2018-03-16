@@ -30,5 +30,31 @@ gulp.task('watch', () => {
 	gulp.watch('./lib/**/*.js', ['js']);
 });
 
+gulp.task('demo:js', () => {
+	return browserify('demo/src/index.js', {debug: true})
+		.transform('babelify', {presets: ['env']})
+		.bundle()
+		.pipe(source('bundle.js'))
+		.pipe(buffer())
+		.pipe(sourcemaps.init({loadMaps: true}))
+		.pipe(sourcemaps.write('./'))
+		.pipe(gulp.dest('demo/dist'))
+})
+
+gulp.task('demo:css', () => {
+	gulp.src('./lib/movie.css')
+		.pipe(minifyCSS())
+		.pipe(gulp.dest('./demo/dist'))
+
+	gulp.src('./node_modules/codemirror/lib/codemirror.css')
+		.pipe(minifyCSS())
+		.pipe(gulp.dest('./demo/dist'))
+})
+
+gulp.task('demo:watch', () => {
+// 	jsBundler.watch({sourceMap: true});
+	gulp.watch('./demo/src/**/*.js', ['demo:js']);
+	gulp.watch('./lib/**/*.js', ['demo:js']);
+});
 
 gulp.task('default', ['js', 'css']);
