@@ -81,7 +81,13 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1>CodeMirror Movie</h1>
+        <header style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+          <h1>CodeMirror Movie</h1>
+
+          <a href="https://github.com/lunochkin/codemirror-movie">
+            <img width="40" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" />
+          </a>
+        </header>
 
         <UnControlled
           editorDidMount={editor => {this.instance = editor}}
