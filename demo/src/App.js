@@ -27,8 +27,8 @@ type: Hello world ::: Typing “Hello world”
 wait: 1000
 # Passing command options as JS object
 tooltip: {text: "Sample tooltip", wait: 2000}
-tooltip: {text: "Sample tooltip 3", wait: 2000}
-tooltip: {text: "Sample tooltip 5", wait: 2000}
+tooltip: {text: "Sample tooltip 3", wait: 2000, pos: {line: 2, ch: 11}}
+tooltip: {text: "Sample tooltip 5", wait: 2000, pos: {line: 3, ch: 5}}
 # wait: 600
 # Perform CodeMirror pre-defined command
 # run: {command: "goWordLeft", times: 2} ::: Move word left
